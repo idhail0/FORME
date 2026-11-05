@@ -32,40 +32,66 @@ async function imageUrl(supabase, path) {
   if (error) throw error;
   return data.signedUrl;
 }
-function mapRow(row, image) {
-  return { id: row.id, name: row.name, category: row.category, color: row.color || '', price: '', image, storagePath: row.image_url || '', remote: true };
+// Smart uploads store a transparent cutout named "<id>.cutout.<ext>", or
+// "<id>.cutout-fb.<ext>" when a back photo exists at "<id>.back.<ext>".
+// Older uploads are plain "<id>.jpg" photos. No extra database column needed.
+const CUTOUT_RE = /\.cutout(-fb)?\.(png|webp)$/;
+export function backPathFor(path) {
+  const m = path && path.match(CUTOUT_RE);
+  return m && m[1] ? path.replace(CUTOUT_RE, '.back.$2') : '';
+}
+function mapRow(row, image, backImage = '') {
+  const path = row.image_url || '';
+  return { id: row.id, name: row.name, category: row.category, color: row.color || '', price: '', image, backImage, cutout: CUTOUT_RE.test(path), storagePath: path, backStoragePath: backPathFor(path), remote: true };
+}
+function extFor(blob) {
+  return blob && blob.type === 'image/webp' ? 'webp' : blob && blob.type === 'image/png' ? 'png' : 'jpg';
 }
 
 export async function fetchWardrobeItems() {
   const supabase = await connectSupabase();
   const { data, error } = await supabase.from('clothing_items').select('id,name,category,color,image_url,created_at').order('created_at', { ascending: false });
   if (error) throw error;
-  return Promise.all((data || []).map(async row => mapRow(row, await imageUrl(supabase, row.image_url))));
+  return Promise.all((data || []).map(async row => {
+    const back = backPathFor(row.image_url);
+    const [front, backUrl] = await Promise.all([imageUrl(supabase, row.image_url), back ? imageUrl(supabase, back).catch(() => '') : '']);
+    return mapRow(row, front, backUrl);
+  }));
 }
 
-export async function addWardrobeItem({ name, category, color, imageBlob }) {
+export async function addWardrobeItem({ name, category, color, imageBlob, backBlob = null, cutout = false }) {
   const supabase = await connectSupabase();
   const { data: { user }, error: userError } = await supabase.auth.getUser();
   if (userError) throw userError;
   if (!user) throw new Error('No signed-in Supabase user is available.');
   const id = crypto.randomUUID();
-  const path = user.id + '/' + id + '.jpg';
-  const { error: uploadError } = await supabase.storage.from(STORAGE_BUCKET).upload(path, imageBlob, { contentType: 'image/jpeg', upsert: false });
-  if (uploadError) throw uploadError;
+  const ext = extFor(imageBlob);
+  const path = cutout ? `${user.id}/${id}.cutout${backBlob ? '-fb' : ''}.${ext}` : `${user.id}/${id}.${ext}`;
+  const backPath = backBlob ? `${user.id}/${id}.back.${extFor(backBlob)}` : '';
+  const uploads = [supabase.storage.from(STORAGE_BUCKET).upload(path, imageBlob, { contentType: imageBlob.type || 'image/jpeg', upsert: false })];
+  if (backBlob) uploads.push(supabase.storage.from(STORAGE_BUCKET).upload(backPath, backBlob, { contentType: backBlob.type || 'image/jpeg', upsert: false }));
+  const results = await Promise.all(uploads);
+  const uploadError = results.find((r) => r.error)?.error;
+  if (uploadError) {
+    await supabase.storage.from(STORAGE_BUCKET).remove([path, backPath].filter(Boolean));
+    throw uploadError;
+  }
   const { data, error } = await supabase.from('clothing_items').insert({ user_id: user.id, name, category, color: color || null, image_url: path }).select('id,name,category,color,image_url,created_at').single();
   if (error) {
-    await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+    await supabase.storage.from(STORAGE_BUCKET).remove([path, backPath].filter(Boolean));
     throw error;
   }
-  return mapRow(data, await imageUrl(supabase, path));
+  const [front, back] = await Promise.all([imageUrl(supabase, path), backPath ? imageUrl(supabase, backPath) : '']);
+  return mapRow(data, front, back);
 }
 
 export async function deleteWardrobeItem(item) {
   const supabase = await connectSupabase();
   const { error } = await supabase.from('clothing_items').delete().eq('id', item.id);
   if (error) throw error;
-  if (item.storagePath) {
-    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove([item.storagePath]);
+  const paths = [item.storagePath, item.backStoragePath].filter(Boolean);
+  if (paths.length) {
+    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove(paths);
     if (storageError) console.warn('Wardrobe row deleted, but its storage image could not be removed.', storageError);
   }
 }

@@ -5,6 +5,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import { ArrowDownLeft, ArrowRight, Check, ChevronDown, LayoutGrid, LogOut, Pencil, Plus, Search, Send, Settings, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { useWardrobeStore } from "./store.js";
+import { SmartUploadModal } from "./features/upload-flow.js";
+import { DressedMannequin } from "./features/mannequin.js";
+import { LookScore } from "./features/look-score.js";
 import { connectSupabase, fetchWardrobeItems, getSupabaseClient, isSupabaseConfigured, signOutSupabase } from "./supabase/client.js";
 const LanguageContext = createContext("en");
 function FormeMark({ size = 18, className = "" }) {
@@ -312,7 +315,8 @@ function DraggableCard({ item, index, onDelete }) {
   const language = useContext(LanguageContext);
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: item.id, data: { item } });
   return /* @__PURE__ */ jsxDEV(motion.article, { ref: setNodeRef, style: transform ? { transform: "translate3d(" + transform.x + "px," + transform.y + "px,0)", zIndex: 20 } : void 0, ...attributes, ...listeners, className: "item-card " + (isDragging ? "is-dragging" : ""), initial: { opacity: 0, y: 12 }, animate: { opacity: 1, y: 0 }, transition: { delay: index * 0.035, duration: 0.3 }, children: [
-    /* @__PURE__ */ jsxDEV("div", { className: "item-image-wrap", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "item-image-wrap" + (item.cutout ? " is-cutout" : "") + (item.backImage ? " has-back" : ""), children: [
+      item.backImage && /* @__PURE__ */ jsxDEV("img", { src: item.backImage, alt: t("Back of " + item.name, "\u062E\u0644\u0641 " + item.name), className: "item-image item-image-back", loading: "lazy" }, void 0, false, void 0, this),
       /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name, className: "item-image", loading: "lazy" }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 18,
@@ -498,7 +502,7 @@ function Closet({ onUpload }) {
 function MiniDraggable({ item, selected }) {
   const t = useT();
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: item.id, data: { item } });
-  return /* @__PURE__ */ jsxDEV("button", { ref: setNodeRef, style: transform ? { transform: "translate3d(" + transform.x + "px," + transform.y + "px,0)", zIndex: 20 } : void 0, ...attributes, ...listeners, className: "mini-piece " + (selected ? "piece-selected " : "") + (isDragging ? "is-dragging" : ""), title: t("Drag " + item.name + " to the look", "\u0627\u0633\u062D\u0628\u064A " + item.name + " \u0625\u0644\u0649 \u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629"), children: [
+  return /* @__PURE__ */ jsxDEV("button", { ref: setNodeRef, style: transform ? { transform: "translate3d(" + transform.x + "px," + transform.y + "px,0)", zIndex: 20 } : void 0, ...attributes, ...listeners, onClick: () => { const s = useWardrobeStore.getState(); selected ? s.removeFromOutfit(item.id) : s.addToOutfit(item); }, "aria-pressed": selected, className: "mini-piece " + (item.cutout ? "is-cutout " : "") + (selected ? "piece-selected " : "") + (isDragging ? "is-dragging" : ""), title: t("Drag " + item.name + " to the look", "\u0627\u0633\u062D\u0628\u064A " + item.name + " \u0625\u0644\u0649 \u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629"), children: [
     /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name }, void 0, false, {
       fileName: "<stdin>",
       lineNumber: 20,
@@ -517,282 +521,6 @@ function MiniDraggable({ item, selected }) {
     fileName: "<stdin>",
     lineNumber: 20,
     columnNumber: 163
-  }, this);
-}
-function OutfitCanvas() {
-  const t = useT();
-  const outfit = useWardrobeStore((s) => s.activeOutfit);
-  const remove = useWardrobeStore((s) => s.removeFromOutfit);
-  const { isOver, setNodeRef } = useDroppable({ id: "outfit-drop" });
-  const upper = outfit.filter((i) => ["Tops", "Dresses", "Outerwear"].includes(i.category));
-  const lower = outfit.filter((i) => ["Bottoms", "Shoes"].includes(i.category));
-  const accessories = outfit.filter((i) => i.category === "Accessories");
-  return /* @__PURE__ */ jsxDEV("div", { ref: setNodeRef, className: "canvas-surface " + (isOver ? "canvas-over" : ""), children: [
-    /* @__PURE__ */ jsxDEV("div", { className: "canvas-grain" }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 502
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "canvas-topline", children: /* @__PURE__ */ jsxDEV("span", { children: t("LOOK IN PROGRESS", "\u0625\u0637\u0644\u0627\u0644\u0629 \u0642\u064A\u062F \u0627\u0644\u062A\u0646\u0633\u064A\u0642") }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 565
-    }, this) }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 533
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "canvas-look-number", children: [
-      "01 ",
-      /* @__PURE__ */ jsxDEV("span", { children: "/" }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 667
-      }, this),
-      " ",
-      t("TODAY", "\u0627\u0644\u064A\u0648\u0645")
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 628
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "mannequin-stage", children: [
-      /* @__PURE__ */ jsxDEV("div", { className: "orbit orbit-one" }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 741
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "orbit orbit-two" }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 775
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "mannequin-shadow" }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 809
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "mannequin mannequin-premium", children: [
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-head", children: /* @__PURE__ */ jsxDEV("span", {}, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 918
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 889
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-neck" }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 931
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-torso", children: [
-          /* @__PURE__ */ jsxDEV("i", { className: "figure-seam" }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 21,
-            columnNumber: 991
-          }, this),
-          /* @__PURE__ */ jsxDEV("i", { className: "figure-waist" }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 21,
-            columnNumber: 1019
-          }, this)
-        ] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 961
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-arm figure-arm-left" }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1054
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-arm figure-arm-right" }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1099
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-legs", children: [
-          /* @__PURE__ */ jsxDEV("i", {}, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 21,
-            columnNumber: 1174
-          }, this),
-          /* @__PURE__ */ jsxDEV("i", {}, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 21,
-            columnNumber: 1178
-          }, this)
-        ] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1145
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-pole" }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1188
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "figure-base" }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1218
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 844
-      }, this),
-      /* @__PURE__ */ jsxDEV(AnimatePresence, { children: upper.map((item, i) => /* @__PURE__ */ jsxDEV(motion.div, { className: "look-layer upper-layer", initial: { opacity: 0, scale: 0.8, y: 12 }, animate: { opacity: 1, scale: 1, y: 0 }, exit: { opacity: 0, scale: 0.8 }, transition: { type: "spring", stiffness: 230, damping: 21 }, style: { zIndex: 4 + i }, children: [
-        /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1526
-        }, this),
-        /* @__PURE__ */ jsxDEV("button", { onClick: () => remove(item.id), "aria-label": t("Remove " + item.name, "\u0625\u0632\u0627\u0644\u0629 " + item.name), children: /* @__PURE__ */ jsxDEV(X, { size: 12 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1658
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1565
-        }, this)
-      ] }, item.id, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 1292
-      }, this)) }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 1254
-      }, this),
-      /* @__PURE__ */ jsxDEV(AnimatePresence, { children: lower.map((item, i) => /* @__PURE__ */ jsxDEV(motion.div, { className: "look-layer lower-layer", initial: { opacity: 0, scale: 0.8, y: 12 }, animate: { opacity: 1, scale: 1, y: 0 }, exit: { opacity: 0, scale: 0.8 }, transition: { type: "spring", stiffness: 230, damping: 21 }, style: { zIndex: 6 + i }, children: [
-        /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 1986
-        }, this),
-        /* @__PURE__ */ jsxDEV("button", { onClick: () => remove(item.id), "aria-label": t("Remove " + item.name, "\u0625\u0632\u0627\u0644\u0629 " + item.name), children: /* @__PURE__ */ jsxDEV(X, { size: 12 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2118
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2025
-        }, this)
-      ] }, item.id, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 1752
-      }, this)) }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 1714
-      }, this),
-      /* @__PURE__ */ jsxDEV(AnimatePresence, { children: accessories.map((item, i) => /* @__PURE__ */ jsxDEV(motion.div, { className: "look-layer accessory-layer", initial: { opacity: 0, scale: 0.8, y: 12 }, animate: { opacity: 1, scale: 1, y: 0 }, exit: { opacity: 0, scale: 0.8 }, transition: { type: "spring", stiffness: 230, damping: 21 }, style: { zIndex: 10 + i }, children: [
-        /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2457
-        }, this),
-        /* @__PURE__ */ jsxDEV("button", { onClick: () => remove(item.id), "aria-label": t("Remove " + item.name, "\u0625\u0632\u0627\u0644\u0629 " + item.name), children: /* @__PURE__ */ jsxDEV(X, { size: 12 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2589
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2496
-        }, this)
-      ] }, item.id, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 2218
-      }, this)) }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 2174
-      }, this),
-      !outfit.length && /* @__PURE__ */ jsxDEV("div", { className: "canvas-hint", children: [
-        /* @__PURE__ */ jsxDEV("span", { className: "hint-arrow", children: /* @__PURE__ */ jsxDEV(ArrowDownLeft, { size: 18 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2720
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2691
-        }, this),
-        /* @__PURE__ */ jsxDEV("span", { children: [
-          t("Drop a piece to", "\u0623\u0636\u064A\u0641\u064A \u0642\u0637\u0639\u0629 \u0644\u0628\u062F\u0621"),
-          /* @__PURE__ */ jsxDEV("br", {}, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 21,
-            columnNumber: 2799
-          }, this),
-          t("start your look", "\u062A\u0646\u0633\u064A\u0642 \u0625\u0637\u0644\u0627\u0644\u062A\u0643")
-        ] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 2753
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 2662
-      }, this),
-      isOver && /* @__PURE__ */ jsxDEV("div", { className: "drop-prompt", children: t("Add to your look", "\u0623\u0636\u064A\u0641\u064A\u0647\u0627 \u0625\u0644\u0649 \u0625\u0637\u0644\u0627\u0644\u062A\u0643") }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 2865
-      }, this)
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 708
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "canvas-footer", children: [
-      /* @__PURE__ */ jsxDEV("div", { className: "look-thumbs", children: [
-        outfit.slice(0, 4).map((i) => /* @__PURE__ */ jsxDEV("img", { src: i.image, alt: i.name }, i.id, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 3038
-        }, this)),
-        !outfit.length && /* @__PURE__ */ jsxDEV("span", { className: "empty-thumb", children: /* @__PURE__ */ jsxDEV(Plus, { size: 14 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 3131
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 21,
-          columnNumber: 3101
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 2983
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "canvas-count", children: [
-        outfit.length,
-        " ",
-        outfit.length === 1 ? t("PIECE", "\u0642\u0637\u0639\u0629") : t("PIECES", "\u0642\u0637\u0639")
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 21,
-        columnNumber: 3162
-      }, this)
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 21,
-      columnNumber: 2952
-    }, this)
-  ] }, void 0, true, {
-    fileName: "<stdin>",
-    lineNumber: 21,
-    columnNumber: 424
   }, this);
 }
 function getStylistSettings() {
@@ -1330,6 +1058,7 @@ function ChatPanel({ compact = false }) {
 }
 function Stylist({ onUpload }) {
   const t = useT();
+  const language = useContext(LanguageContext);
   const [showAll, setShowAll] = useState(false);
   const items = useWardrobeStore((s) => s.items);
   const outfit = useWardrobeStore((s) => s.activeOutfit);
@@ -1474,7 +1203,7 @@ function Stylist({ onUpload }) {
           lineNumber: 32,
           columnNumber: 1853
         }, this),
-        /* @__PURE__ */ jsxDEV(OutfitCanvas, {}, void 0, false, {
+        /* @__PURE__ */ jsxDEV(Fragment, { children: [/* @__PURE__ */ jsxDEV(DressedMannequin, { language }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV(LookScore, { items: outfit, language }, void 0, false, void 0, this)] }, void 0, true, {
           fileName: "<stdin>",
           lineNumber: 32,
           columnNumber: 1997
@@ -1521,288 +1250,6 @@ function Stylist({ onUpload }) {
     fileName: "<stdin>",
     lineNumber: 32,
     columnNumber: 326
-  }, this);
-}
-function UploadModal({ open, onClose }) {
-  const t = useT();
-  const language = useContext(LanguageContext);
-  const [loading, setLoading] = useState(false);
-  const [preview, setPreview] = useState("");
-  const [name, setName] = useState("");
-  const [category, setCategory] = useState("Tops");
-  const [color, setColor] = useState("");
-  const [categoryOpen, setCategoryOpen] = useState(false);
-  const [error, setError] = useState("");
-  const inputRef = useRef(null);
-  const add = useWardrobeStore((s) => s.addItem);
-  const choosePhoto = async (event) => {
-    const file = event.target.files && event.target.files[0];
-    if (!file) return;
-    if (!file.type.startsWith("image/")) {
-      setError(t("Choose an image file to continue.", "\u0627\u062E\u062A\u0627\u0631\u064A \u0645\u0644\u0641 \u0635\u0648\u0631\u0629 \u0644\u0644\u0645\u062A\u0627\u0628\u0639\u0629."));
-      return;
-    }
-    setError("");
-    setLoading(true);
-    try {
-      const image = await createImageBitmap(file);
-      const scale = Math.min(1, 1e3 / Math.max(image.width, image.height));
-      const canvas = document.createElement("canvas");
-      canvas.width = Math.round(image.width * scale);
-      canvas.height = Math.round(image.height * scale);
-      const ctx = canvas.getContext("2d");
-      ctx.fillStyle = "#f4f1eb";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-      image.close && image.close();
-      const data = canvas.toDataURL("image/jpeg", 0.78);
-      setPreview(data);
-      setName(file.name.replace(/\.[^.]+$/, "").replace(/[-_]+/g, " ").replace(/\s+/g, " ").trim() || "New wardrobe piece");
-    } catch (err) {
-      setError(t("This photo could not be opened. Try a JPG or PNG.", "\u062A\u0639\u0630\u0651\u0631 \u0641\u062A\u062D \u0627\u0644\u0635\u0648\u0631\u0629. \u062C\u0631\u0651\u0628\u064A \u0645\u0644\u0641 JPG \u0623\u0648 PNG."));
-    } finally {
-      setLoading(false);
-      event.target.value = "";
-    }
-  };
-  const save = async () => {
-    if (!preview || loading) return;
-    setLoading(true);
-    setError("");
-    try {
-      const imageBlob = await (await fetch(preview)).blob();
-      await add({ name: name.trim() || "New wardrobe piece", category, color: color.trim(), imageBlob });
-      setPreview("");
-      setName("");
-      setCategory("Tops");
-      setColor("");
-      setError("");
-      onClose();
-    } catch (err) {
-      setError(err.message || t("Could not save this piece to Supabase.", "\u062A\u0639\u0630\u0651\u0631 \u062D\u0641\u0638 \u0627\u0644\u0642\u0637\u0639\u0629 \u0641\u064A Supabase."));
-    } finally {
-      setLoading(false);
-    }
-  };
-  return /* @__PURE__ */ jsxDEV(AnimatePresence, { children: open && /* @__PURE__ */ jsxDEV(motion.div, { className: "modal-backdrop", initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, onMouseDown: (e) => {
-    if (e.target === e.currentTarget) onClose();
-  }, children: /* @__PURE__ */ jsxDEV(motion.div, { className: "upload-modal", initial: { opacity: 0, y: 15, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 10, scale: 0.98 }, children: [
-    /* @__PURE__ */ jsxDEV("button", { className: "modal-close", onClick: onClose, "aria-label": t("Close", "\u0625\u063A\u0644\u0627\u0642"), children: /* @__PURE__ */ jsxDEV(X, { size: 18 }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2336
-    }, this) }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2254
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "upload-icon", children: /* @__PURE__ */ jsxDEV(Upload, { size: 20 }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2388
-    }, this) }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2359
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "eyebrow", children: t("MAKE IT YOURS", "\u0627\u062C\u0639\u0644\u064A\u0647\u0627 \u0644\u0643") }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2413
-    }, this),
-    /* @__PURE__ */ jsxDEV("h2", { children: t("Add a piece", "\u0623\u0636\u064A\u0641\u064A \u0642\u0637\u0639\u0629") }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2477
-    }, this),
-    /* @__PURE__ */ jsxDEV("p", { children: t("Choose a photo from your device to add it to your closet.", "\u0627\u062E\u062A\u0627\u0631\u064A \u0635\u0648\u0631\u0629 \u0645\u0646 \u062C\u0647\u0627\u0632\u0643 \u0644\u0625\u0636\u0627\u0641\u062A\u0647\u0627 \u0625\u0644\u0649 \u062E\u0632\u0627\u0646\u062A\u0643.") }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2517
-    }, this),
-    /* @__PURE__ */ jsxDEV("input", { ref: inputRef, className: "file-input-hidden", type: "file", accept: "image/*", onChange: choosePhoto }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2632
-    }, this),
-    preview ? /* @__PURE__ */ jsxDEV(Fragment, { children: [
-      /* @__PURE__ */ jsxDEV("div", { className: "photo-preview", children: [
-        /* @__PURE__ */ jsxDEV("img", { src: preview, alt: t("Selected clothing", "\u0642\u0637\u0639\u0629 \u0645\u0644\u0627\u0628\u0633 \u0645\u062D\u062F\u062F\u0629") }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 2779
-        }, this),
-        /* @__PURE__ */ jsxDEV("button", { onClick: () => {
-          setPreview("");
-          setError("");
-        }, "aria-label": t("Remove selected photo", "\u0625\u0632\u0627\u0644\u0629 \u0627\u0644\u0635\u0648\u0631\u0629 \u0627\u0644\u0645\u062D\u062F\u062F\u0629"), children: /* @__PURE__ */ jsxDEV(X, { size: 14 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 2962
-        }, this) }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 2847
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 2748
-      }, this),
-      /* @__PURE__ */ jsxDEV("label", { className: "field-label", children: [
-        t("PIECE NAME", "\u0627\u0633\u0645 \u0627\u0644\u0642\u0637\u0639\u0629"),
-        /* @__PURE__ */ jsxDEV("input", { className: "piece-name-input", value: name, onChange: (e) => setName(e.target.value), placeholder: t("Name this piece", "\u0627\u0633\u0645 \u0627\u0644\u0642\u0637\u0639\u0629") }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 3052
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 2991
-      }, this),
-      /* @__PURE__ */ jsxDEV("label", { className: "field-label", children: [
-        t("COLOR", "\u0627\u0644\u0644\u0648\u0646"),
-        /* @__PURE__ */ jsxDEV("input", { className: "piece-name-input", value: color, onChange: (e) => setColor(e.target.value), placeholder: t("e.g. Ivory", "\u0645\u062B\u0644\u064B\u0627: \u0639\u0627\u062C\u064A") }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 3247
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 3196
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "field-label category-field", children: [
-        /* @__PURE__ */ jsxDEV("span", { children: t("CATEGORY", "\u0627\u0644\u0641\u0626\u0629") }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 3433
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "category-picker", onKeyDown: (e) => {
-          if (e.key === "Escape") setCategoryOpen(false);
-        }, children: [
-          /* @__PURE__ */ jsxDEV("button", { type: "button", className: "category-trigger", "aria-haspopup": "listbox", "aria-expanded": categoryOpen, onClick: () => setCategoryOpen(!categoryOpen), children: [
-            /* @__PURE__ */ jsxDEV("span", { children: category }, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 33,
-              columnNumber: 3711
-            }, this),
-            /* @__PURE__ */ jsxDEV(ChevronDown, { size: 14 }, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 33,
-              columnNumber: 3734
-            }, this)
-          ] }, void 0, true, {
-            fileName: "<stdin>",
-            lineNumber: 33,
-            columnNumber: 3562
-          }, this),
-          /* @__PURE__ */ jsxDEV(AnimatePresence, { children: categoryOpen && /* @__PURE__ */ jsxDEV(motion.div, { className: "category-menu", role: "listbox", initial: { opacity: 0, y: 7, scale: 0.98 }, animate: { opacity: 1, y: 0, scale: 1 }, exit: { opacity: 0, y: 5, scale: 0.98 }, transition: { duration: 0.15 }, children: ["Tops", "Bottoms", "Outerwear", "Dresses", "Accessories", "Shoes"].map((c) => /* @__PURE__ */ jsxDEV("button", { type: "button", role: "option", "aria-selected": category === c, className: "category-option " + (category === c ? "selected" : ""), onClick: () => {
-            setCategory(c);
-            setCategoryOpen(false);
-          }, children: [
-            /* @__PURE__ */ jsxDEV("span", { className: "category-option-mark" }, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 33,
-              columnNumber: 4241
-            }, this),
-            categoryText(c, language),
-            category === c && /* @__PURE__ */ jsxDEV(Check, { size: 14 }, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 33,
-              columnNumber: 4322
-            }, this)
-          ] }, c, true, {
-            fileName: "<stdin>",
-            lineNumber: 33,
-            columnNumber: 4054
-          }, this)) }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 33,
-            columnNumber: 3799
-          }, this) }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 33,
-            columnNumber: 3767
-          }, this)
-        ] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 3469
-        }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 3389
-      }, this),
-      /* @__PURE__ */ jsxDEV("button", { className: "primary-button save-piece-button", disabled: loading, onClick: save, children: [
-        /* @__PURE__ */ jsxDEV(Check, { size: 15 }, void 0, false, {
-          fileName: "<stdin>",
-          lineNumber: 33,
-          columnNumber: 4483
-        }, this),
-        t("Add to my closet", "\u0623\u0636\u064A\u0641\u064A\u0647\u0627 \u0625\u0644\u0649 \u062E\u0632\u0627\u0646\u062A\u064A")
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4396
-      }, this)
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 2746
-    }, this) : /* @__PURE__ */ jsxDEV("button", { className: "upload-dropzone", disabled: loading, onClick: () => inputRef.current && inputRef.current.click(), children: [
-      /* @__PURE__ */ jsxDEV("span", { className: "upload-glyph", children: loading ? /* @__PURE__ */ jsxDEV("span", { className: "spinner" }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4710
-      }, this) : /* @__PURE__ */ jsxDEV(Upload, { size: 19 }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4738
-      }, this) }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4670
-      }, this),
-      /* @__PURE__ */ jsxDEV("strong", { children: loading ? t("Preparing your photo\u2026", "\u062C\u0627\u0631\u064D \u062A\u062C\u0647\u064A\u0632 \u0627\u0644\u0635\u0648\u0631\u0629\u2026") : t("Choose a photo", "\u0627\u062E\u062A\u0627\u0631\u064A \u0635\u0648\u0631\u0629") }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4765
-      }, this),
-      /* @__PURE__ */ jsxDEV("small", { children: loading ? t("One moment", "\u0644\u062D\u0638\u0629 \u0648\u0627\u062D\u062F\u0629") : t("JPG, PNG or another image from your device", "JPG \u0623\u0648 PNG \u0623\u0648 \u0635\u0648\u0631\u0629 \u0623\u062E\u0631\u0649 \u0645\u0646 \u062C\u0647\u0627\u0632\u0643") }, void 0, false, {
-        fileName: "<stdin>",
-        lineNumber: 33,
-        columnNumber: 4873
-      }, this)
-    ] }, void 0, true, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 4558
-    }, this),
-    error && /* @__PURE__ */ jsxDEV("div", { className: "upload-error", children: error }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 5027
-    }, this),
-    /* @__PURE__ */ jsxDEV("div", { className: "local-note", children: t("On save, your photo and piece details are sent to Supabase.", "\u0639\u0646\u062F \u0627\u0644\u062D\u0641\u0638\u060C \u062A\u064F\u0631\u0633\u0644 \u0627\u0644\u0635\u0648\u0631\u0629 \u0648\u062A\u0641\u0627\u0635\u064A\u0644 \u0627\u0644\u0642\u0637\u0639\u0629 \u0625\u0644\u0649 Supabase.") }, void 0, false, {
-      fileName: "<stdin>",
-      lineNumber: 33,
-      columnNumber: 5071
-    }, this)
-  ] }, void 0, true, {
-    fileName: "<stdin>",
-    lineNumber: 33,
-    columnNumber: 2112
-  }, this) }, void 0, false, {
-    fileName: "<stdin>",
-    lineNumber: 33,
-    columnNumber: 1951
-  }, this) }, void 0, false, {
-    fileName: "<stdin>",
-    lineNumber: 33,
-    columnNumber: 1927
   }, this);
 }
 function AuthScreen({ language, setLanguage, initialError }) {
@@ -2153,7 +1600,7 @@ function App() {
       lineNumber: 35,
       columnNumber: 2911
     }, this),
-    /* @__PURE__ */ jsxDEV(UploadModal, { open: upload, onClose: () => setUpload(false) }, void 0, false, {
+    /* @__PURE__ */ jsxDEV(SmartUploadModal, { open: upload, onClose: () => setUpload(false), language }, void 0, false, {
       fileName: "<stdin>",
       lineNumber: 35,
       columnNumber: 3344

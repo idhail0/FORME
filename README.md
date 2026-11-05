@@ -71,6 +71,20 @@ After the first deploy:
 1. In Vercel → **Settings → Deployment Protection**, turn off **Vercel Authentication** for production. Otherwise every visitor, and the browser's manifest/service-worker requests, gets redirected to a Vercel login and the app cannot be installed.
 2. In Supabase → **Authentication → URL Configuration**, set **Site URL** to the Vercel domain and add `https://<your-domain>/**` to **Redirect URLs**, so confirmation emails link back to the app.
 
+## Smart uploads and the dressable mannequin
+
+Everything below runs in the browser, so photos never leave the device until the piece is saved.
+
+- **Background removal:** [`onnx-community/ormbg-ONNX`](https://huggingface.co/onnx-community/ormbg-ONNX) (Apache-2.0, int8, ~42 MB).
+- **Piece type:** the image half of [`Xenova/clip-vit-base-patch32`](https://huggingface.co/Xenova/clip-vit-base-patch32) (MIT, 4-bit, ~60 MB), compared against label embeddings precomputed in [`features/garment-embeddings.json`](./features/garment-embeddings.json). The user can change the suggestion before saving.
+- **Color:** k-means over the cutout's pixels, matched to a fashion palette ([`features/colors.js`](./features/colors.js)).
+- **Runtime:** [Transformers.js](https://huggingface.co/docs/transformers.js) 4.3.1 in a Web Worker ([`features/vision-worker.js`](./features/vision-worker.js)). The models download once (~100 MB) and the browser caches them. `vercel.json` sends `COOP: same-origin` + `COEP: credentialless`, which enables multi-threaded WASM in Chrome, Edge and Firefox (about 3× faster).
+- **Front/back mockup:** the upload flow asks for a back photo, shows both on a studio backdrop, and can export the mockup as a PNG. Cutouts are stored as `<id>.cutout.webp` (or `.cutout-fb.webp` plus `<id>.back.webp` when there is a back photo), so no database migration is needed.
+- **Mannequin:** an SVG figure with three finishes; pieces snap to body zones and can be dragged and resized ([`features/mannequin.js`](./features/mannequin.js)).
+- **Match score:** color harmony, completeness and style consistency, with tips ([`features/look-score.js`](./features/look-score.js)).
+
+The feature modules use [htm](https://github.com/developit/htm) for JSX-like templates without a build step.
+
 ## AI stylist providers
 
 The stylist defaults to **WebSim AI** when available. It can also call:
@@ -92,6 +106,7 @@ Provider selection and API keys are saved in the current browser's local storage
 ├── manifest.json            # Installable app metadata
 ├── sw.js                    # Offline cache: network-first app code, cache-first CDN
 ├── vercel.json              # Vercel routing, caching, and security headers
+├── features/                # Smart upload, vision worker, mannequin, match score
 ├── icons/                   # Logo (logo-mark.svg), app icon source (icon.svg), PWA icons
 └── supabase/
     ├── client.js           # Auth, wardrobe data, and image storage helpers
