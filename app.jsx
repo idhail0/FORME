@@ -2143,7 +2143,7 @@ function App() {
   }, this);
 }
 if ("serviceWorker" in navigator && window.isSecureContext) {
-  navigator.serviceWorker.register("/sw.js", { scope: "/" }).catch((error) => console.warn("FORME service worker registration failed:", error));
+  navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch((error) => console.warn("FORME service worker registration failed:", error));
 }
 const installButton = document.getElementById("pwa-install");
 const installHelp = document.getElementById("pwa-install-help");
