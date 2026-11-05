@@ -4,7 +4,7 @@ import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
 import { Aperture, ArrowDownLeft, ArrowRight, Check, ChevronDown, LayoutGrid, LogOut, Pencil, Plus, Search, Send, Settings, Sparkles, Trash2, Upload, X } from "lucide-react";
-import { useWardrobeStore } from "./store.jsx";
+import { useWardrobeStore } from "./store.js";
 import { connectSupabase, fetchWardrobeItems, getSupabaseClient, isSupabaseConfigured, signOutSupabase } from "./supabase/client.js";
 const LanguageContext = createContext("en");
 function useT() {
