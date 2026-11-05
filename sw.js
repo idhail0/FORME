@@ -1,18 +1,18 @@
 const CACHE_NAME = 'forme-wardrobe-v1';
 const APP_SHELL = [
-  '/',
-  '/index.html',
-  '/styles.css',
-  '/pwa.css',
-  '/app.jsx',
-  '/store.jsx',
-  '/data.js',
-  '/supabase/client.js',
-  '/supabase/config.js',
-  '/manifest.json',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
-  '/icons/apple-touch-icon.png'
+  './',
+  './index.html',
+  './styles.css',
+  './pwa.css',
+  './app.jsx',
+  './store.js',
+  './data.js',
+  './supabase/client.js',
+  './supabase/config.js',
+  './manifest.json',
+  './icons/icon-192.png',
+  './icons/icon-512.png',
+  './icons/apple-touch-icon.png'
 ];
 
 self.addEventListener('install', (event) => {
