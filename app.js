@@ -3,10 +3,16 @@ import React, { createContext, useContext, useEffect, useState, useRef } from "r
 import { createRoot } from "react-dom/client";
 import { AnimatePresence, motion } from "framer-motion";
 import { DndContext, PointerSensor, useDraggable, useDroppable, useSensor, useSensors } from "@dnd-kit/core";
-import { Aperture, ArrowDownLeft, ArrowRight, Check, ChevronDown, LayoutGrid, LogOut, Pencil, Plus, Search, Send, Settings, Sparkles, Trash2, Upload, X } from "lucide-react";
+import { ArrowDownLeft, ArrowRight, Check, ChevronDown, LayoutGrid, LogOut, Pencil, Plus, Search, Send, Settings, Sparkles, Trash2, Upload, X } from "lucide-react";
 import { useWardrobeStore } from "./store.js";
 import { connectSupabase, fetchWardrobeItems, getSupabaseClient, isSupabaseConfigured, signOutSupabase } from "./supabase/client.js";
 const LanguageContext = createContext("en");
+function FormeMark({ size = 18, className = "" }) {
+  return /* @__PURE__ */ jsxDEV("svg", { className: "forme-mark " + className, width: size, height: size, viewBox: "0 0 32 32", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", focusable: "false", children: [
+    /* @__PURE__ */ jsxDEV("path", { d: "M9.5 29V10a6.5 6.5 0 0 1 13 0v19Z" }, void 0, false, void 0, this),
+    /* @__PURE__ */ jsxDEV("path", { d: "M13.8 24.5V12h5.2M13.8 18h4" }, void 0, false, void 0, this)
+  ] }, void 0, true, void 0, this);
+}
 function useT() {
   const language = useContext(LanguageContext);
   return (english, arabic) => language === "ar" ? arabic : english;
@@ -23,7 +29,7 @@ function Sidebar({ page, setPage, user, onSignOut }) {
   const initials = (email || "U").slice(0, 1).toUpperCase();
   return /* @__PURE__ */ jsxDEV("aside", { className: "sidebar", children: [
     /* @__PURE__ */ jsxDEV("div", { className: "brand", children: [
-      /* @__PURE__ */ jsxDEV("span", { className: "brand-mark", children: /* @__PURE__ */ jsxDEV(Aperture, { size: 18 }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("span", { className: "brand-mark", children: /* @__PURE__ */ jsxDEV(FormeMark, { size: 18 }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 15,
         columnNumber: 88
@@ -186,8 +192,9 @@ function Sidebar({ page, setPage, user, onSignOut }) {
 function Topbar({ page, syncStatus, language, setLanguage }) {
   const t = useT();
   const title = page === "closet" ? t("My Closet", "\u062E\u0632\u0627\u0646\u062A\u064A") : t("AI Stylist", "\u0645\u0646\u0633\u0651\u0642 \u0627\u0644\u0623\u0632\u064A\u0627\u0621 \u0627\u0644\u0630\u0643\u064A");
-  const status = syncStatus.kind === "ready" ? t("SUPABASE CONNECTED", "\u0645\u062A\u0635\u0644 \u0628\u0640 SUPABASE") : syncStatus.kind === "connecting" ? t("CONNECTING", "\u062C\u0627\u0631\u064D \u0627\u0644\u0627\u062A\u0635\u0627\u0644") : syncStatus.kind === "error" ? t("SUPABASE ERROR", "\u062E\u0637\u0623 \u0641\u064A SUPABASE") : t("SUPABASE SETUP NEEDED", "\u0625\u0639\u062F\u0627\u062F SUPABASE \u0645\u0637\u0644\u0648\u0628");
+  const status = syncStatus.kind === "ready" ? t("Synced", "\u0645\u062A\u0632\u0627\u0645\u0646") : syncStatus.kind === "connecting" ? t("Syncing", "\u062C\u0627\u0631\u064D \u0627\u0644\u0645\u0632\u0627\u0645\u0646\u0629") : syncStatus.kind === "error" ? t("Sync error", "\u062E\u0637\u0623 \u0641\u064A \u0627\u0644\u0645\u0632\u0627\u0645\u0646\u0629") : t("Setup needed", "\u0627\u0644\u0625\u0639\u062F\u0627\u062F \u0645\u0637\u0644\u0648\u0628");
   return /* @__PURE__ */ jsxDEV("header", { className: "topbar", children: [
+    /* @__PURE__ */ jsxDEV("div", { className: "topbar-brand", "aria-hidden": "true", children: [/* @__PURE__ */ jsxDEV(FormeMark, { size: 22 }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: "FORME" }, void 0, false, void 0, this)] }, void 0, true, void 0, this),
     /* @__PURE__ */ jsxDEV("div", { className: "breadcrumb", children: [
       /* @__PURE__ */ jsxDEV("span", { children: t("Workspace", "\u0645\u0633\u0627\u062D\u0629 \u0627\u0644\u0639\u0645\u0644") }, void 0, false, {
         fileName: "<stdin>",
@@ -246,7 +253,7 @@ function Topbar({ page, syncStatus, language, setLanguage }) {
           columnNumber: 1039
         }, this),
         " ",
-        t("SPRING / SUMMER 25", "\u0631\u0628\u064A\u0639 / \u0635\u064A\u0641 \u0662\u0665")
+        t("Autumn / Winter 26", "\u062E\u0631\u064A\u0641 / \u0634\u062A\u0627\u0621 \u0662\u0666")
       ] }, void 0, true, {
         fileName: "<stdin>",
         lineNumber: 16,
@@ -1817,7 +1824,7 @@ function AuthScreen({ language, setLanguage, initialError }) {
       if (!isSupabaseConfigured()) throw new Error(t("Supabase is not configured. Check supabase/config.js.", "\u0644\u0645 \u064A\u062A\u0645 \u0625\u0639\u062F\u0627\u062F Supabase. \u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0645\u0644\u0641 supabase/config.js."));
       const supabase = getSupabaseClient();
       if (signup) {
-        const { data, error: error2 } = await supabase.auth.signUp({ email: email.trim(), password });
+        const { data, error: error2 } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin + "/" } });
         if (error2) throw error2;
         if (!data.session) setNotice(t("Check your email to confirm your account, then sign in.", "\u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0628\u0631\u064A\u062F\u0643 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0644\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0633\u0627\u0628\u060C \u062B\u0645 \u0633\u062C\u0651\u0644\u064A \u0627\u0644\u062F\u062E\u0648\u0644."));
         else setNotice(t("Account created.", "\u062A\u0645 \u0625\u0646\u0634\u0627\u0621 \u0627\u0644\u062D\u0633\u0627\u0628."));
@@ -1850,7 +1857,7 @@ function AuthScreen({ language, setLanguage, initialError }) {
     }, this),
     /* @__PURE__ */ jsxDEV("section", { className: "auth-card", children: [
       /* @__PURE__ */ jsxDEV("div", { className: "auth-brand", children: [
-        /* @__PURE__ */ jsxDEV("span", { className: "brand-mark", children: /* @__PURE__ */ jsxDEV(Aperture, { size: 18 }, void 0, false, {
+        /* @__PURE__ */ jsxDEV("span", { className: "brand-mark", children: /* @__PURE__ */ jsxDEV(FormeMark, { size: 18 }, void 0, false, {
           fileName: "<stdin>",
           lineNumber: 34,
           columnNumber: 1608
@@ -1974,8 +1981,27 @@ function AuthScreen({ language, setLanguage, initialError }) {
     columnNumber: 1212
   }, this);
 }
+const ROUTES = { closet: "/", stylist: "/stylist" };
+function pageFromPath(pathname) {
+  const path = (pathname || "/").replace(/\/+$/, "").toLowerCase();
+  return path === "/stylist" ? "stylist" : "closet";
+}
 function App() {
-  const [page, setPage] = useState("closet");
+  const [page, setPage] = useState(() => pageFromPath(window.location.pathname));
+  useEffect(() => {
+    const target = ROUTES[page] || "/";
+    const current = window.location.pathname.replace(/\/+$/, "") || "/";
+    if (current !== target) {
+      const known = Object.values(ROUTES).includes(current);
+      window.history[known ? "pushState" : "replaceState"]({ page }, "", target + window.location.search + window.location.hash);
+    }
+    document.title = (page === "stylist" ? "AI Stylist" : "My Closet") + " \u00B7 FORME";
+  }, [page]);
+  useEffect(() => {
+    const onPop = () => setPage(pageFromPath(window.location.pathname));
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
   const [upload, setUpload] = useState(false);
   const [language, setLanguage] = useState(() => {
     try {
@@ -2143,7 +2169,21 @@ function App() {
   }, this);
 }
 if ("serviceWorker" in navigator && window.isSecureContext) {
-  navigator.serviceWorker.register("./sw.js", { scope: "./" }).catch((error) => console.warn("FORME service worker registration failed:", error));
+  const hadController = Boolean(navigator.serviceWorker.controller);
+  let reloading = false;
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController || reloading) return;
+    reloading = true;
+    window.location.reload();
+  });
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("/sw.js", { scope: "/" }).then((registration) => {
+      registration.update().catch(() => {});
+      document.addEventListener("visibilitychange", () => {
+        if (document.visibilityState === "visible") registration.update().catch(() => {});
+      });
+    }).catch((error) => console.warn("FORME service worker registration failed:", error));
+  });
 }
 const installButton = document.getElementById("pwa-install");
 const installHelp = document.getElementById("pwa-install-help");

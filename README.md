@@ -8,7 +8,7 @@
 <p align="center">
   <a href="https://github.com/idhail0/FORME">Repository</a>
   ·
-  <a href="https://idhail0.github.io/FORME/">Live app</a>
+  <a href="https://forme-moe-705d.vercel.app">Live app</a>
 </p>
 
 <p align="center">
@@ -58,7 +58,18 @@ python3 -m http.server 8000
 
 Open [http://localhost:8000](http://localhost:8000) and create an account.
 
-For production, deploy the repository to any static host. GitHub Pages works without a build command; make sure the Supabase site URL matches the deployed app URL.
+### 3. Deploy on Vercel
+
+The app is deployed on Vercel as a static site, with no build step: Framework Preset **Other**, empty build command, output directory `.` (the repository root). [`vercel.json`](./vercel.json) handles the rest:
+
+- **Routes:** every path without a file extension (`/`, `/stylist`, …) serves `index.html`, so refreshing or opening a deep link works.
+- **Caching:** `sw.js`, `manifest.json`, and the app's JS/CSS are revalidated on every request, so a new deploy reaches users on their next visit. Icons are cached for a week.
+- **PWA headers:** `Service-Worker-Allowed: /` and the correct manifest content type.
+
+After the first deploy:
+
+1. In Vercel → **Settings → Deployment Protection**, turn off **Vercel Authentication** for production. Otherwise every visitor, and the browser's manifest/service-worker requests, gets redirected to a Vercel login and the app cannot be installed.
+2. In Supabase → **Authentication → URL Configuration**, set **Site URL** to the Vercel domain and add `https://<your-domain>/**` to **Redirect URLs**, so confirmation emails link back to the app.
 
 ## AI stylist providers
 
@@ -79,8 +90,9 @@ Provider selection and API keys are saved in the current browser's local storage
 ├── styles.css              # Main visual system and responsive layout
 ├── pwa.css                 # Install prompt and PWA-specific styles
 ├── manifest.json            # Installable app metadata
-├── sw.js                    # Static asset and navigation cache
-├── icons/                   # PWA icons
+├── sw.js                    # Offline cache: network-first app code, cache-first CDN
+├── vercel.json              # Vercel routing, caching, and security headers
+├── icons/                   # Logo (logo-mark.svg), app icon source (icon.svg), PWA icons
 └── supabase/
     ├── client.js           # Auth, wardrobe data, and image storage helpers
     ├── config.js           # Project URL and publishable key

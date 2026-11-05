@@ -1,0 +1,7 @@
+# Not part of the served app
+README.md
+supabase/README.md
+supabase/schema.sql
+uploads/
+.claude/
+.playwright-mcp/
