@@ -74,7 +74,7 @@ export function nearestColor(rgb, { lightShare = 0 } = {}) {
   const lab = rgbToLab(rgb);
   // Studio shadows make white garments average out grey; trust the lit pixels.
   const chroma = Math.hypot(lab[1], lab[2]);
-  if (chroma < 12 && lab[0] > 45 && lightShare > 0.3) return PALETTE_LAB.find((p) => p.name === (lab[2] > 4 ? "Ivory" : "White"));
+  if (chroma < 14 && lab[0] > 42 && lightShare > 0.2) return PALETTE_LAB.find((p) => p.name === (lab[2] > 4 ? "Ivory" : "White"));
   let best = PALETTE_LAB[0], bestD = Infinity;
   for (const p of PALETTE_LAB) {
     const d = (lab[0] - p.lab[0]) ** 2 * 0.7 + (lab[1] - p.lab[1]) ** 2 + (lab[2] - p.lab[2]) ** 2;

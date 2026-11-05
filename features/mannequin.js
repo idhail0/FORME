@@ -8,8 +8,21 @@ import { useDroppable } from "@dnd-kit/core";
 import { ArrowDownLeft, Minus, Plus, RotateCcw, X } from "lucide-react";
 import { html, tr } from "./html.js";
 import { useWardrobeStore } from "../store.js";
+import { fitGarment } from "./garment-fit.js";
 
 const VB_W = 400, VB_H = 900;
+
+// Body-landmark placement + waist taper for cutouts (falls back to the zone box).
+function useGarmentFit(item) {
+  const [fitted, setFitted] = useState(null);
+  useEffect(() => {
+    let alive = true;
+    setFitted(null);
+    fitGarment(item).then((f) => alive && setFitted(f));
+    return () => { alive = false; };
+  }, [item.image, item.category, item.cutout]);
+  return fitted;
+}
 // Zones: [x, y, width, height] in mannequin units, plus how the image aligns in the box.
 const ZONES = {
   Outerwear: { box: [86, 160, 228, 400], align: "top", z: 16 },
@@ -101,7 +114,11 @@ function zoneFor(item, accessoryIndex) {
 }
 
 function Layer({ item, zone, fit, selected, onSelect, onFit, stageRef, t, onRemove }) {
-  const [x, y, w, h] = zone.box;
+  const fitted = useGarmentFit(item);
+  const [broken, setBroken] = useState(false);
+  const [x, y, w, h] = fitted?.box || zone.box;
+  const src = fitted?.url || item.image;
+  const shaded = Boolean(fitted?.url);
   const drag = useRef(null);
   const style = {
     left: (x / VB_W) * 100 + "%", top: (y / VB_H) * 100 + "%",
@@ -137,7 +154,10 @@ function Layer({ item, zone, fit, selected, onSelect, onFit, stageRef, t, onRemo
       if (e.key === "Delete" || e.key === "Backspace") onRemove(item.id);
     }}
     onFocus=${() => onSelect(item.id)}>
-    <div className="mq-fit" style=${fitStyle}><img src=${item.image} alt=${item.name} draggable="false" /></div>
+    <div className=${"mq-fit" + (fitted?.box ? " is-fitted" : "")} style=${fitStyle}>
+      <img src=${src} alt=${item.name} draggable="false" onError=${() => setBroken(true)} style=${broken ? { visibility: "hidden" } : undefined} />
+      ${shaded && html`<span className="mq-shade" aria-hidden="true" style=${{ WebkitMaskImage: `url(${src})`, maskImage: `url(${src})` }}></span>`}
+    </div>
   </${motion.div}>`;
 }
 

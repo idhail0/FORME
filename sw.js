@@ -4,7 +4,7 @@
 // - Pinned CDN modules and fonts: cache first (their URLs are versioned).
 // - Icons and images: stale-while-revalidate.
 // - Supabase (auth, data, signed image URLs) is never cached.
-const VERSION = 'v5';
+const VERSION = 'v6';
 const SHELL_CACHE = 'forme-shell-' + VERSION;
 const RUNTIME_CACHE = 'forme-runtime-' + VERSION;
 const APP_SHELL = [
@@ -29,6 +29,7 @@ const APP_SHELL = [
   '/features/garment-embeddings.json',
   '/features/upload-flow.js',
   '/features/mannequin.js',
+  '/features/garment-fit.js',
   '/features/look-score.js'
 ];
 // cdn.jsdelivr.net serves the pinned Transformers.js / ONNX Runtime builds for smart uploads.

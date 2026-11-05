@@ -483,3 +483,9 @@ body:has(.modal-backdrop) .pwa-install,body:has(.ai-settings-shade) .pwa-install
   .score-summary strong{font-size:24px}
   .item-image-wrap.has-back:before{top:8px;left:8px;font-size:10px}
 }
+
+/* ---- 2D fit: landmark placement + fabric shading ---- */
+.mq-fit{position:relative}
+.mq-fit.is-fitted img{object-fit:fill}
+.mq-shade{position:absolute;inset:0;pointer-events:none;-webkit-mask-size:100% 100%;mask-size:100% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;background:linear-gradient(90deg,#1a0d0a70 0%,#1a0d0a1f 16%,#1a0d0a00 30%,#ffffff14 44%,#1a0d0a00 58%,#1a0d0a2e 80%,#1a0d0a85 100%),linear-gradient(180deg,#1a0d0a33 0%,#1a0d0a00 9%,#1a0d0a00 88%,#1a0d0a3d 100%);mix-blend-mode:multiply}
+.mq-layer.is-cutout .mq-fit.is-fitted img{filter:drop-shadow(0 5px 7px #0a06067a) drop-shadow(0 1px 1px #0a060659) saturate(1.02)}

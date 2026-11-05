@@ -5,7 +5,23 @@
 // 3. Dominant color      — k-means on the cutout's opaque pixels
 // Models download once and are cached by the browser (Cache Storage).
 import { env, pipeline, AutoProcessor, CLIPVisionModelWithProjection, RawImage } from "https://cdn.jsdelivr.net/npm/@huggingface/transformers@4.3.1/dist/transformers.min.js";
-import { dominantColors, nearestColor, rgbToHex } from "./colors.js";
+import { dominantColors, nearestColor, rgbToHex, rgbToLab, PALETTE } from "./colors.js";
+
+// k-means often splits one light garment into lit / shadow / tinted slices; read
+// them together so a white sneaker isn't named after its biggest shadow slice.
+function lightNeutralGroup(clusters) {
+  const members = clusters.filter((c) => {
+    const [L, a, b] = rgbToLab(c.rgb);
+    return Math.hypot(a, b) < 16 && L > 42;
+  });
+  const share = members.reduce((s, c) => s + c.share, 0);
+  if (!members.length || share < 0.4) return null;
+  const lit = members.reduce((s, c) => s + c.share * (c.lightShare || 0), 0) / share;
+  if (lit < 0.2) return null;
+  const brightest = members.slice().sort((x, y) => rgbToLab(y.rgb)[0] - rgbToLab(x.rgb)[0])[0];
+  const warm = rgbToLab(brightest.rgb)[2] > 4;
+  return { share, rgb: brightest.rgb, swatch: PALETTE.find((p) => p.name === (warm ? "Ivory" : "White")) };
+}
 
 env.allowLocalModels = false;
 env.useBrowserCache = true;
@@ -133,8 +149,14 @@ async function analyze(blob, post) {
   const croppedData = cctx.getImageData(0, 0, box.w, box.h).data;
   const clusters = dominantColors(croppedData, { k: 4 });
   const main = clusters[0];
-  const named = main ? nearestColor(main.rgb, { lightShare: main.lightShare }) : null;
-  const color = named ? { name: named.name, ar: named.ar, hex: rgbToHex(main.rgb), share: main.share } : null;
+  const light = lightNeutralGroup(clusters);
+  let color = null;
+  if (light && light.share >= (main?.share || 0)) {
+    color = { name: light.swatch.name, ar: light.swatch.ar, hex: rgbToHex(light.rgb), share: light.share };
+  } else if (main) {
+    const named = nearestColor(main.rgb, { lightShare: main.lightShare });
+    color = { name: named.name, ar: named.ar, hex: rgbToHex(main.rgb), share: main.share };
+  }
   const accents = clusters.slice(1).filter((c) => c.share > 0.18).map((c) => nearestColor(c.rgb).name);
 
   post({ stage: "done", progress: 1 });
