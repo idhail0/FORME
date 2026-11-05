@@ -73,7 +73,7 @@ Provider selection and API keys are saved in the current browser's local storage
 
 ```text
 .
-├── app.jsx                 # React application, auth, closet, and stylist UI
+├── app.js                  # React application, auth, closet, and stylist UI
 ├── data.js                 # Starter wardrobe and welcome message
 ├── store.js                # Zustand wardrobe and stylist state
 ├── styles.css              # Main visual system and responsive layout

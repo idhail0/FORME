@@ -4,7 +4,7 @@ const APP_SHELL = [
   './index.html',
   './styles.css',
   './pwa.css',
-  './app.jsx',
+  './app.js',
   './store.js',
   './data.js',
   './supabase/client.js',
