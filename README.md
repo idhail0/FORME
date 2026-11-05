@@ -11,7 +11,9 @@
   <a href="https://idhail0.github.io/FORME/">Live app</a>
 </p>
 
-![FORME wardrobe workspace](./uploads/image.png)
+<p align="center">
+  <img src="./icons/icon-512.png" alt="FORME logo" width="180">
+</p>
 
 ## What is FORME?
 
