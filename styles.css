@@ -974,3 +974,16 @@ html{background:#fbfaf7}
 body:has(.app-shell.is-rtl) .pwa-install{right:auto;left:max(18px,env(safe-area-inset-left))}
 body:has(.app-shell.is-rtl) .pwa-install-help{right:auto;left:max(18px,env(safe-area-inset-left))}
 .mq-layer.is-photo img{border-color:#ffffff;box-shadow:0 12px 26px -10px rgba(28,31,27,.35),0 0 0 1px rgba(28,31,27,.06)}
+
+/* ---- Appearance control (account menu) ---- */
+.appearance{display:grid;gap:8px;padding:10px 6px 12px;border-bottom:1px solid var(--line)}
+.appearance-label{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.app-shell.is-rtl .appearance-label{letter-spacing:0}
+.appearance-switch{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;padding:3px;border-radius:12px;background:var(--surface-2);box-shadow:inset 0 0 0 1px var(--line)}
+.appearance-switch button{position:relative;isolation:isolate;height:34px;margin:0;padding:0 4px;border:0;border-radius:9px;background:transparent;color:var(--text-2);font-size:12px;display:grid;place-items:center}
+.appearance-switch button>span:not(.glass-pill){position:relative;z-index:1;display:inline-flex;align-items:center;gap:5px}
+.appearance-switch button.active{color:var(--text);font-weight:600}
+.appearance-switch .glass-pill{background:var(--surface);box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 0 0 1px var(--line),0 4px 10px -6px rgba(28,31,27,.35)}
+.account-menu{min-width:250px}
+html.theme-switching,html.theme-switching *{transition:background-color .32s ease,color .32s ease,border-color .32s ease,fill .32s ease!important}
+@media (prefers-reduced-motion:reduce){html.theme-switching,html.theme-switching *{transition:none!important}}

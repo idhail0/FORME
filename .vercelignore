@@ -5,3 +5,4 @@ supabase/schema.sql
 uploads/
 .claude/
 .playwright-mcp/
+tools/

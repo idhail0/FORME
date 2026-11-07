@@ -8,6 +8,7 @@ import { useWardrobeStore } from "./store.js";
 import { SmartUploadModal } from "./features/upload-flow.js";
 import { DressedMannequin } from "./features/mannequin.js";
 import { LookScore } from "./features/look-score.js";
+import { AppearanceControl } from "./features/theme.js";
 import { connectSupabase, fetchWardrobeItems, getSupabaseClient, isSupabaseConfigured, signOutSupabase } from "./supabase/client.js";
 const LanguageContext = createContext("en");
 const SPRING_UI = { type: "spring", bounce: 0, duration: 0.38 };
@@ -28,6 +29,7 @@ function categoryText(category, language) {
 const nav = [["closet", "My Closet", LayoutGrid], ["stylist", "AI Stylist", Sparkles]];
 function Sidebar({ page, setPage, user, onSignOut }) {
   const t = useT();
+  const sidebarLanguage = useContext(LanguageContext);
   const [accountOpen, setAccountOpen] = useState(false);
   const email = user?.email || "";
   const initials = (email || "U").slice(0, 1).toUpperCase();
@@ -160,6 +162,7 @@ function Sidebar({ page, setPage, user, onSignOut }) {
             lineNumber: 15,
             columnNumber: 1246
           }, this),
+          /* @__PURE__ */ jsxDEV(AppearanceControl, { language: sidebarLanguage }, void 0, false, void 0, this),
           /* @__PURE__ */ jsxDEV("button", { onClick: onSignOut, children: [
             /* @__PURE__ */ jsxDEV(LogOut, { size: 14 }, void 0, false, {
               fileName: "<stdin>",
