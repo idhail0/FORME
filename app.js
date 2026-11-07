@@ -10,6 +10,7 @@ import { DressedMannequin } from "./features/mannequin.js";
 import { LookScore } from "./features/look-score.js";
 import { connectSupabase, fetchWardrobeItems, getSupabaseClient, isSupabaseConfigured, signOutSupabase } from "./supabase/client.js";
 const LanguageContext = createContext("en");
+const SPRING_UI = { type: "spring", bounce: 0, duration: 0.38 };
 function FormeMark({ size = 18, className = "" }) {
   return /* @__PURE__ */ jsxDEV("svg", { className: "forme-mark " + className, width: size, height: size, viewBox: "0 0 32 32", fill: "none", stroke: "currentColor", strokeWidth: 2.2, strokeLinecap: "round", strokeLinejoin: "round", "aria-hidden": "true", focusable: "false", children: [
     /* @__PURE__ */ jsxDEV("path", { d: "M9.5 29V10a6.5 6.5 0 0 1 13 0v19Z" }, void 0, false, void 0, this),
@@ -63,8 +64,8 @@ function Sidebar({ page, setPage, user, onSignOut }) {
       lineNumber: 15,
       columnNumber: 178
     }, this),
-    /* @__PURE__ */ jsxDEV("nav", { className: "side-nav", children: nav.map(([id, label, Icon]) => /* @__PURE__ */ jsxDEV("button", { className: "nav-item " + (page === id ? "active" : ""), onClick: () => setPage(id), children: [
-      /* @__PURE__ */ jsxDEV(Icon, { size: 17 }, void 0, false, {
+    /* @__PURE__ */ jsxDEV("nav", { className: "side-nav", children: nav.map(([id, label, Icon]) => /* @__PURE__ */ jsxDEV("button", { className: "nav-item " + (page === id ? "active" : ""), "aria-current": page === id ? "page" : void 0, onClick: () => setPage(id), children: [
+      page === id && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "nav-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this),       /* @__PURE__ */ jsxDEV(Icon, { size: 17 }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 15,
         columnNumber: 397
@@ -221,12 +222,12 @@ function Topbar({ page, syncStatus, language, setLanguage }) {
     }, this),
     /* @__PURE__ */ jsxDEV("div", { className: "topbar-actions", children: [
       /* @__PURE__ */ jsxDEV("div", { className: "language-switch", "aria-label": t("Language", "\u0627\u0644\u0644\u063A\u0629"), children: [
-        /* @__PURE__ */ jsxDEV("button", { className: language === "en" ? "active" : "", onClick: () => setLanguage("en"), lang: "en", children: "EN" }, void 0, false, {
+        /* @__PURE__ */ jsxDEV("button", { className: language === "en" ? "active" : "", onClick: () => setLanguage("en"), lang: "en", children: [language === "en" && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "lang-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: "EN" }, void 0, false, void 0, this)] }, void 0, true, {
           fileName: "<stdin>",
           lineNumber: 16,
           columnNumber: 693
         }, this),
-        /* @__PURE__ */ jsxDEV("button", { className: language === "ar" ? "active" : "", onClick: () => setLanguage("ar"), lang: "ar", children: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" }, void 0, false, {
+        /* @__PURE__ */ jsxDEV("button", { className: language === "ar" ? "active" : "", onClick: () => setLanguage("ar"), lang: "ar", children: [language === "ar" && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "lang-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" }, void 0, false, void 0, this)] }, void 0, true, {
           fileName: "<stdin>",
           lineNumber: 16,
           columnNumber: 794
@@ -405,7 +406,7 @@ function Closet({ onUpload }) {
       columnNumber: 605
     }, this),
     /* @__PURE__ */ jsxDEV("div", { className: "closet-controls", children: [
-      /* @__PURE__ */ jsxDEV("div", { className: "filter-tabs", children: cats.map((c) => /* @__PURE__ */ jsxDEV("button", { className: "filter-tab " + (category === c ? "selected" : ""), onClick: () => setCategory(c), children: catLabel(c) }, c, false, {
+      /* @__PURE__ */ jsxDEV("div", { className: "filter-tabs", children: cats.map((c) => /* @__PURE__ */ jsxDEV("button", { className: "filter-tab " + (category === c ? "selected" : ""), "aria-pressed": category === c, onClick: () => setCategory(c), children: [category === c && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "filter-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: catLabel(c) }, void 0, false, void 0, this)] }, c, true, {
         fileName: "<stdin>",
         lineNumber: 19,
         columnNumber: 1007
@@ -1088,12 +1089,31 @@ function Stylist({ onUpload }) {
       columnNumber: 610
     }, this),
     /* @__PURE__ */ jsxDEV("div", { className: "stylist-workspace", children: [
-      /* @__PURE__ */ jsxDEV("div", { className: "stylist-chat-column", children: [
-        /* @__PURE__ */ jsxDEV(ChatPanel, {}, void 0, false, {
+      /* @__PURE__ */ jsxDEV("section", { className: "stylist-stage", "aria-label": t("The look", "\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629"), children: [
+        /* @__PURE__ */ jsxDEV("div", { className: "canvas-title-row", children: [
+          /* @__PURE__ */ jsxDEV("span", { children: t("THE LOOK", "\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629") }, void 0, false, {
+            fileName: "<stdin>",
+            lineNumber: 32,
+            columnNumber: 1887
+          }, this),
+          /* @__PURE__ */ jsxDEV("span", { className: "canvas-private", children: [
+            /* @__PURE__ */ jsxDEV("i", {}, void 0, false, {
+              fileName: "<stdin>",
+              lineNumber: 32,
+              columnNumber: 1959
+            }, this),
+            t("PRIVATE", "\u062E\u0627\u0635\u0629")
+          ] }, void 0, true, {
+            fileName: "<stdin>",
+            lineNumber: 32,
+            columnNumber: 1926
+          }, this)
+        ] }, void 0, true, {
           fileName: "<stdin>",
           lineNumber: 32,
-          columnNumber: 1084
+          columnNumber: 1853
         }, this),
+        /* @__PURE__ */ jsxDEV(DressedMannequin, { language }, void 0, false, void 0, this),
         /* @__PURE__ */ jsxDEV("div", { className: "wardrobe-drawer", children: [
           /* @__PURE__ */ jsxDEV("div", { className: "drawer-title", children: [
             /* @__PURE__ */ jsxDEV("div", { children: [
@@ -1174,69 +1194,15 @@ function Stylist({ onUpload }) {
           lineNumber: 32,
           columnNumber: 1096
         }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 32,
-        columnNumber: 1047
-      }, this),
-      /* @__PURE__ */ jsxDEV("div", { className: "stylist-canvas-column", children: [
-        /* @__PURE__ */ jsxDEV("div", { className: "canvas-title-row", children: [
-          /* @__PURE__ */ jsxDEV("span", { children: t("THE LOOK", "\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629") }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 32,
-            columnNumber: 1887
-          }, this),
-          /* @__PURE__ */ jsxDEV("span", { className: "canvas-private", children: [
-            /* @__PURE__ */ jsxDEV("i", {}, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 32,
-              columnNumber: 1959
-            }, this),
-            t("PRIVATE", "\u062E\u0627\u0635\u0629")
-          ] }, void 0, true, {
-            fileName: "<stdin>",
-            lineNumber: 32,
-            columnNumber: 1926
-          }, this)
-        ] }, void 0, true, {
+      ] }, void 0, true, void 0, this),
+      /* @__PURE__ */ jsxDEV("aside", { className: "stylist-side", children: [
+        /* @__PURE__ */ jsxDEV(LookScore, { items: outfit, language }, void 0, false, void 0, this),
+        /* @__PURE__ */ jsxDEV(ChatPanel, {}, void 0, false, {
           fileName: "<stdin>",
           lineNumber: 32,
-          columnNumber: 1853
-        }, this),
-        /* @__PURE__ */ jsxDEV(Fragment, { children: [/* @__PURE__ */ jsxDEV(DressedMannequin, { language }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV(LookScore, { items: outfit, language }, void 0, false, void 0, this)] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 32,
-          columnNumber: 1997
-        }, this),
-        /* @__PURE__ */ jsxDEV("div", { className: "look-caption", children: [
-          /* @__PURE__ */ jsxDEV("span", { children: t("Styled for you", "\u0645\u0646\u0633\u0651\u0642\u0629 \u0644\u0643") }, void 0, false, {
-            fileName: "<stdin>",
-            lineNumber: 32,
-            columnNumber: 2042
-          }, this),
-          /* @__PURE__ */ jsxDEV("span", { children: [
-            t("Move pieces to make it yours", "\u062D\u0631\u0651\u0643\u064A \u0627\u0644\u0642\u0637\u0639 \u0644\u062A\u0646\u0627\u0633\u0628\u0643"),
-            " ",
-            /* @__PURE__ */ jsxDEV(ArrowRight, { size: 13 }, void 0, false, {
-              fileName: "<stdin>",
-              lineNumber: 32,
-              columnNumber: 2152
-            }, this)
-          ] }, void 0, true, {
-            fileName: "<stdin>",
-            lineNumber: 32,
-            columnNumber: 2088
-          }, this)
-        ] }, void 0, true, {
-          fileName: "<stdin>",
-          lineNumber: 32,
-          columnNumber: 2012
+          columnNumber: 1084
         }, this)
-      ] }, void 0, true, {
-        fileName: "<stdin>",
-        lineNumber: 32,
-        columnNumber: 1814
-      }, this)
+      ] }, void 0, true, void 0, this)
     ] }, void 0, true, {
       fileName: "<stdin>",
       lineNumber: 32,
@@ -1287,12 +1253,12 @@ function AuthScreen({ language, setLanguage, initialError }) {
   };
   return /* @__PURE__ */ jsxDEV("main", { className: "auth-page rtl:text-right", dir: language === "ar" ? "rtl" : "ltr", children: [
     /* @__PURE__ */ jsxDEV("div", { className: "auth-language-switch", children: [
-      /* @__PURE__ */ jsxDEV("button", { className: language === "en" ? "active" : "", onClick: () => setLanguage("en"), children: "EN" }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("button", { className: language === "en" ? "active" : "", onClick: () => setLanguage("en"), lang: "en", children: [language === "en" && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "auth-lang-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: "EN" }, void 0, false, void 0, this)] }, void 0, true, {
         fileName: "<stdin>",
         lineNumber: 34,
         columnNumber: 1327
       }, this),
-      /* @__PURE__ */ jsxDEV("button", { className: language === "ar" ? "active" : "", onClick: () => setLanguage("ar"), children: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("button", { className: language === "ar" ? "active" : "", onClick: () => setLanguage("ar"), lang: "ar", children: [language === "ar" && /* @__PURE__ */ jsxDEV(motion.span, { layoutId: "auth-lang-pill", className: "glass-pill", "aria-hidden": "true", transition: { type: "spring", bounce: 0, duration: 0.38 } }, void 0, false, void 0, this), /* @__PURE__ */ jsxDEV("span", { children: "\u0627\u0644\u0639\u0631\u0628\u064A\u0629" }, void 0, false, void 0, this)] }, void 0, true, {
         fileName: "<stdin>",
         lineNumber: 34,
         columnNumber: 1418
@@ -1578,7 +1544,7 @@ function App() {
         lineNumber: 35,
         columnNumber: 2939
       }, this),
-      /* @__PURE__ */ jsxDEV(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxDEV(motion.div, { className: "view-wrap", initial: { opacity: 0, y: 7 }, animate: { opacity: 1, y: 0 }, exit: { opacity: 0, y: -5 }, transition: { duration: 0.2 }, children: page === "closet" ? /* @__PURE__ */ jsxDEV(Closet, { onUpload: () => setUpload(true) }, void 0, false, {
+      /* @__PURE__ */ jsxDEV(AnimatePresence, { mode: "wait", children: /* @__PURE__ */ jsxDEV(motion.div, { className: "view-wrap", initial: { opacity: 0, y: 10, filter: "blur(6px)" }, animate: { opacity: 1, y: 0, filter: "blur(0px)" }, exit: { opacity: 0, y: -6, filter: "blur(4px)" }, transition: SPRING_UI, children: page === "closet" ? /* @__PURE__ */ jsxDEV(Closet, { onUpload: () => setUpload(true) }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 35,
         columnNumber: 3224

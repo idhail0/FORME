@@ -3,7 +3,7 @@
 //   2. back photo (optional) -> background removed
 //   3. studio mockup (front / back) + editable details -> save
 import { useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, animate, motion, useMotionValue } from "framer-motion";
 import { ArrowLeft, Camera, Check, Download, ImagePlus, RotateCcw, Sparkles, X } from "lucide-react";
 import { html, tr } from "./html.js";
 import { analyzeGarment, visionSupported, warmupVision } from "./vision.js";
@@ -18,6 +18,19 @@ const LABEL_AR = {
   dress: "فستان", jumpsuit: "جمبسوت", sneakers: "سنيكرز", boots: "بوت", "high heels": "كعب عالي", loafers: "لوفر", sandals: "صندل",
   handbag: "حقيبة يد", hat: "قبعة", scarf: "وشاح", belt: "حزام", sunglasses: "نظارة شمسية", necklace: "قلادة", watch: "ساعة",
 };
+// Apple's momentum projection (Designing Fluid Interfaces): where a flick would come to rest.
+const project = (velocity, decelerationRate = 0.998) => ((velocity / 1000) * decelerationRate) / (1 - decelerationRate);
+const SPRING = { type: "spring", bounce: 0, duration: 0.42 };
+function useMediaQuery(query) {
+  const [match, setMatch] = useState(() => typeof matchMedia !== "undefined" && matchMedia(query).matches);
+  useEffect(() => {
+    const mq = matchMedia(query);
+    const on = () => setMatch(mq.matches);
+    mq.addEventListener("change", on);
+    return () => mq.removeEventListener("change", on);
+  }, [query]);
+  return match;
+}
 const titleCase = (s) => s.replace(/\b\w/g, (c) => c.toUpperCase());
 
 async function toJpeg(file, maxSide = 1400) {
@@ -64,13 +77,13 @@ async function renderMockup({ front, back, name }) {
     ctx.drawImage(img, x, y, w, h);
     ctx.restore();
     if (views.length > 1) {
-      ctx.fillStyle = "#7a6a62"; ctx.font = "600 26px Geist, system-ui, sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "#776e6f"; ctx.font = "600 26px Geist, system-ui, sans-serif"; ctx.textAlign = "center";
       ctx.fillText(i === 0 ? "FRONT" : "BACK", slotW * i + slotW / 2, H - 120);
     }
   }
-  ctx.fillStyle = "#3b2c27"; ctx.textAlign = "left"; ctx.font = "54px 'Instrument Serif', Georgia, serif";
+  ctx.fillStyle = "#201819"; ctx.textAlign = "left"; ctx.font = "54px 'Instrument Serif', Georgia, serif";
   ctx.fillText(name || "FORME", 70, H - 70);
-  ctx.fillStyle = "#b07259"; ctx.textAlign = "right"; ctx.font = "30px 'Instrument Serif', Georgia, serif";
+  ctx.fillStyle = "#ac5567"; ctx.textAlign = "right"; ctx.font = "30px 'Instrument Serif', Georgia, serif";
   ctx.fillText("FORME.", W - 70, H - 72);
   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
 }
@@ -152,6 +165,32 @@ export function SmartUploadModal({ open, onClose, language }) {
     setName(""); setCategory("Tops"); setColor(""); setError(""); setSaving(false);
   };
   const close = () => { reset(); onClose(); };
+  const isSheet = useMediaQuery("(max-width: 760px)");
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const sheetRef = useRef(null);
+  // Only the handle and step bar start a drag; the body keeps normal scrolling and taps.
+  const keepInBody = (e) => { if (isSheet) e.stopPropagation(); };
+  // Pixel values (not "100%") so the drag always starts from a numeric position.
+  const offscreen = typeof window !== "undefined" ? window.innerHeight : 900;
+  const sheetY = useMotionValue(offscreen);
+  const onDragEnd = (_, info) => {
+    const height = sheetRef.current?.offsetHeight || 600;
+    const current = sheetY.get();
+    // Decide from where the gesture is heading (momentum projection), not where the finger let go,
+    // then hand the finger's velocity to the spring so there is no seam between drag and animation.
+    const resting = current + project(info.velocity.y);
+    if (resting > height * 0.42) {
+      animate(sheetY, offscreen, { type: "spring", bounce: 0, duration: 0.32, velocity: info.velocity.y }).then(close);
+    } else {
+      animate(sheetY, 0, { type: "spring", bounce: info.velocity.y < -300 ? 0.18 : 0, duration: 0.42, velocity: info.velocity.y });
+    }
+  };
+  // Sheets enter and leave along the same path (from the bottom); dialogs materialize in place.
+  const motionProps = reduceMotion
+    ? { initial: { opacity: 0 }, animate: { opacity: 1 }, exit: { opacity: 0 }, transition: { duration: 0.18 } }
+    : isSheet
+      ? { initial: { y: offscreen }, animate: { y: 0 }, exit: { y: offscreen }, transition: SPRING }
+      : { initial: { opacity: 0, scale: 0.94, filter: "blur(10px)" }, animate: { opacity: 1, scale: 1, filter: "blur(0px)" }, exit: { opacity: 0, scale: 0.96, filter: "blur(8px)" }, transition: SPRING };
 
   const process = async (file, side) => {
     if (!file.type.startsWith("image/")) { setError(t("Choose an image file to continue.", "اختاري ملف صورة للمتابعة.")); return; }
@@ -233,13 +272,18 @@ export function SmartUploadModal({ open, onClose, language }) {
   return html`<${AnimatePresence}>${open && html`
     <${motion.div} className="modal-backdrop" initial=${{ opacity: 0 }} animate=${{ opacity: 1 }} exit=${{ opacity: 0 }}
       onMouseDown=${(e) => { if (e.target === e.currentTarget && !job) close(); }}>
-      <${motion.div} className="upload-modal smart-upload" role="dialog" aria-modal="true" aria-label=${t("Add a piece", "أضيفي قطعة")}
-        initial=${{ opacity: 0, y: 18, scale: 0.98 }} animate=${{ opacity: 1, y: 0, scale: 1 }} exit=${{ opacity: 0, y: 12, scale: 0.98 }}>
-        <button className="modal-close" onClick=${close} aria-label=${t("Close", "إغلاق")} disabled=${Boolean(job)}><${X} size=${18} /></button>
+      <${motion.div} ref=${sheetRef} className=${"upload-modal smart-upload" + (isSheet ? " is-sheet" : "")} role="dialog" aria-modal="true" aria-label=${t("Add a piece", "أضيفي قطعة")}
+        ...${motionProps}
+        style=${isSheet ? { y: sheetY } : undefined}
+        drag=${isSheet && !reduceMotion && !job ? "y" : false} dragMomentum=${false}
+        dragConstraints=${{ top: 0 }} dragElastic=${{ top: 0.06, bottom: 1 }} onDragEnd=${onDragEnd}>
+        ${isSheet && html`<div className="sheet-grabber" aria-hidden="true"><span></span></div>`}
+        <button className="modal-close" onPointerDown=${keepInBody} onClick=${close} aria-label=${t("Close", "إغلاق")} disabled=${Boolean(job)}><${X} size=${18} /></button>
         <div className="smart-steps" aria-hidden="true">
           ${[t("Front", "الأمام"), t("Back", "الخلف"), t("Review", "مراجعة")].map((label, i) => html`<span key=${i} className=${i < stepIndex ? "done" : i === stepIndex ? "active" : ""}><i>${i + 1}</i>${label}</span>`)}
         </div>
 
+        <div className="sheet-body" onPointerDown=${keepInBody}>
         ${job ? html`<${Progress} job=${job} t=${t} />` : step === "front" ? html`
           <div className="eyebrow">${t("STEP 1 · FRONT", "الخطوة ١ · الأمام")}</div>
           <h2>${t("Add a piece", "أضيفي قطعة")}</h2>
@@ -296,6 +340,7 @@ export function SmartUploadModal({ open, onClose, language }) {
         `}
         ${error && html`<div className="upload-error" role="alert">${error}</div>`}
         <div className="local-note">${t("Photos are processed on your device. On save, the piece is sent to your private Supabase storage.", "تتم معالجة الصور على جهازك. عند الحفظ تُرسل القطعة إلى تخزينك الخاص في Supabase.")}</div>
+        </div>
       </${motion.div}>
     </${motion.div}>`}
   </${AnimatePresence}>`;
