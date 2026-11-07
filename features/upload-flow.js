@@ -77,13 +77,13 @@ async function renderMockup({ front, back, name }) {
     ctx.drawImage(img, x, y, w, h);
     ctx.restore();
     if (views.length > 1) {
-      ctx.fillStyle = "#776e6f"; ctx.font = "600 26px Geist, system-ui, sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "#72746f"; ctx.font = "600 26px Geist, system-ui, sans-serif"; ctx.textAlign = "center";
       ctx.fillText(i === 0 ? "FRONT" : "BACK", slotW * i + slotW / 2, H - 120);
     }
   }
-  ctx.fillStyle = "#201819"; ctx.textAlign = "left"; ctx.font = "54px 'Instrument Serif', Georgia, serif";
+  ctx.fillStyle = "#1c1f1b"; ctx.textAlign = "left"; ctx.font = "54px 'Instrument Serif', Georgia, serif";
   ctx.fillText(name || "FORME", 70, H - 70);
-  ctx.fillStyle = "#ac5567"; ctx.textAlign = "right"; ctx.font = "30px 'Instrument Serif', Georgia, serif";
+  ctx.fillStyle = "#5f7a5a"; ctx.textAlign = "right"; ctx.font = "30px 'Instrument Serif', Georgia, serif";
   ctx.fillText("FORME.", W - 70, H - 72);
   return new Promise((resolve) => canvas.toBlob(resolve, "image/png"));
 }
@@ -193,10 +193,10 @@ export function SmartUploadModal({ open, onClose, language }) {
       : { initial: { opacity: 0, scale: 0.94, filter: "blur(10px)" }, animate: { opacity: 1, scale: 1, filter: "blur(0px)" }, exit: { opacity: 0, scale: 0.96, filter: "blur(8px)" }, transition: SPRING };
 
   const process = async (file, side) => {
-    if (!file.type.startsWith("image/")) { setError(t("Choose an image file to continue.", "اختاري ملف صورة للمتابعة.")); return; }
+    if (!file.type.startsWith("image/")) { setError(t("Choose an image file to continue.", "يلزم اختيار ملف صورة للمتابعة.")); return; }
     setError("");
     const original = await toJpeg(file).catch(() => null);
-    if (!original) { setError(t("This photo could not be opened. Try a JPG or PNG.", "تعذّر فتح الصورة. جرّبي ملف JPG أو PNG.")); return; }
+    if (!original) { setError(t("This photo could not be opened. Try a JPG or PNG.", "تعذّر فتح الصورة. يُرجى استخدام ملف JPG أو PNG.")); return; }
     const originalUrl = URL.createObjectURL(original);
     if (!visionSupported) {
       const entry = { original, originalUrl };
@@ -272,7 +272,7 @@ export function SmartUploadModal({ open, onClose, language }) {
   return html`<${AnimatePresence}>${open && html`
     <${motion.div} className="modal-backdrop" initial=${{ opacity: 0 }} animate=${{ opacity: 1 }} exit=${{ opacity: 0 }}
       onMouseDown=${(e) => { if (e.target === e.currentTarget && !job) close(); }}>
-      <${motion.div} ref=${sheetRef} className=${"upload-modal smart-upload" + (isSheet ? " is-sheet" : "")} role="dialog" aria-modal="true" aria-label=${t("Add a piece", "أضيفي قطعة")}
+      <${motion.div} ref=${sheetRef} className=${"upload-modal smart-upload" + (isSheet ? " is-sheet" : "")} role="dialog" aria-modal="true" aria-label=${t("Add a piece", "إضافة قطعة")}
         ...${motionProps}
         style=${isSheet ? { y: sheetY } : undefined}
         drag=${isSheet && !reduceMotion && !job ? "y" : false} dragMomentum=${false}
@@ -286,9 +286,9 @@ export function SmartUploadModal({ open, onClose, language }) {
         <div className="sheet-body" onPointerDown=${keepInBody}>
         ${job ? html`<${Progress} job=${job} t=${t} />` : step === "front" ? html`
           <div className="eyebrow">${t("STEP 1 · FRONT", "الخطوة ١ · الأمام")}</div>
-          <h2>${t("Add a piece", "أضيفي قطعة")}</h2>
-          <p>${t("Photograph the front of the piece. We remove the background and recognize the type and color for you.", "صوّري القطعة من الأمام. سنزيل الخلفية ونتعرّف على نوعها ولونها تلقائياً.")}</p>
-          <${Dropzone} title=${t("Choose the front photo", "اختاري صورة الأمام")} hint=${t("Lay it flat or hang it, in good light", "ضعيها مسطّحة أو معلّقة بإضاءة جيدة")} onFile=${(f) => process(f, "front")} icon=${Camera} />
+          <h2>${t("Add a piece", "إضافة قطعة")}</h2>
+          <p>${t("Photograph the front of the piece. We remove the background and recognize the type and color for you.", "صورة للقطعة من الأمام تكفي: سنزيل الخلفية ونتعرّف على نوعها ولونها تلقائياً.")}</p>
+          <${Dropzone} title=${t("Choose the front photo", "اختيار صورة الأمام")} hint=${t("Lay it flat or hang it, in good light", "القطعة مفرودة أو معلّقة، بإضاءة جيدة")} onFile=${(f) => process(f, "front")} icon=${Camera} />
           ${!visionSupported && html`<div className="local-note">${t("Smart processing isn't supported in this browser; photos are saved as they are.", "المعالجة الذكية غير مدعومة في هذا المتصفح؛ ستُحفظ الصور كما هي.")}</div>`}
         ` : step === "back" ? html`
           <div className="eyebrow">${t("STEP 2 · BACK", "الخطوة ٢ · الخلف")}</div>
@@ -303,8 +303,8 @@ export function SmartUploadModal({ open, onClose, language }) {
               ` : html`<strong>${t("Front photo added", "تمت إضافة صورة الأمام")}</strong>`}
             </div>
           </div>
-          <${Dropzone} title=${t("Choose the back photo", "اختاري صورة الخلف")} hint=${t("Same light and angle as the front", "بنفس الإضاءة وزاوية الأمام")} onFile=${(f) => process(f, "back")} icon=${RotateCcw}
-            secondary=${html`<button type="button" className="modal-secondary smart-skip" onClick=${() => setStep("review")}>${t("Skip — no back photo", "تخطّي — بدون صورة خلفية")}</button>`} />
+          <${Dropzone} title=${t("Choose the back photo", "اختيار صورة الخلف")} hint=${t("Same light and angle as the front", "بنفس الإضاءة وزاوية الأمام")} onFile=${(f) => process(f, "back")} icon=${RotateCcw}
+            secondary=${html`<button type="button" className="modal-secondary smart-skip" onClick=${() => setStep("review")}>${t("Skip — no back photo", "متابعة بدون صورة خلفية")}</button>`} />
         ` : html`
           <div className="eyebrow">${t("STEP 3 · REVIEW", "الخطوة ٣ · مراجعة")}</div>
           <h2>${t("Your piece", "قطعتك")}</h2>
@@ -326,7 +326,7 @@ export function SmartUploadModal({ open, onClose, language }) {
             <div className="color-field">
               <i className="swatch-dot large" style=${{ background: findColorByName(color)?.hex || r?.color?.hex || "transparent" }}></i>
               <select className="piece-category-select" value=${findColorByName(color)?.name || ""} onChange=${(e) => setColor(e.target.value)}>
-                <option value="">${t("Choose a color", "اختاري لوناً")}</option>
+                <option value="">${t("Choose a color", "اختيار لون")}</option>
                 ${PALETTE.map((p) => html`<option key=${p.name} value=${p.name}>${language === "ar" ? p.ar : p.name}</option>`)}
               </select>
             </div>
@@ -334,7 +334,7 @@ export function SmartUploadModal({ open, onClose, language }) {
           <div className="smart-actions">
             <button type="button" className="modal-secondary" onClick=${() => setStep("back")}><${ArrowLeft} size=${14} />${t("Back", "رجوع")}</button>
             <button className="primary-button save-piece-button" disabled=${saving} onClick=${save}>
-              ${saving ? html`<span className="spinner"></span>` : html`<${Check} size=${15} />`}${t("Add to my closet", "أضيفيها إلى خزانتي")}
+              ${saving ? html`<span className="spinner"></span>` : html`<${Check} size=${15} />`}${t("Add to my closet", "إضافة إلى خزانتي")}
             </button>
           </div>
         `}

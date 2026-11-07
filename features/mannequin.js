@@ -212,9 +212,9 @@ export function DressedMannequin({ language }) {
 
     ${!outfit.length && html`<div className="canvas-hint">
       <span className="hint-arrow"><${ArrowDownLeft} size=${18} /></span>
-      <span>${t("Drag or tap a piece", "اسحبي أو اضغطي على قطعة")}<br />${t("to dress the mannequin", "لتلبيس المانيكان")}</span>
+      <span>${t("Drag or tap a piece", "سحب قطعة أو الضغط عليها")}<br />${t("to dress the mannequin", "لتلبيس المانيكان")}</span>
     </div>`}
-    ${isOver && html`<div className="drop-prompt">${t("Dress the mannequin", "ألبسي المانيكان")}</div>`}
+    ${isOver && html`<div className="drop-prompt">${t("Dress the mannequin", "إلباس المانيكان")}</div>`}
 
     <div className="canvas-footer">
       <div className="look-thumbs">

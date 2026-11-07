@@ -389,13 +389,13 @@ function Closet({ onUpload }) {
   const catLabel = (c) => c === "All pieces" ? t("All pieces", "\u0643\u0644 \u0627\u0644\u0642\u0637\u0639") : categoryText(c, language);
   const filtered = items.filter((i) => (category === "All pieces" || i.category === category) && i.name.toLowerCase().includes(search.toLowerCase()));
   return /* @__PURE__ */ jsxDEV("main", { className: "page-content", children: [
-    /* @__PURE__ */ jsxDEV(Heading, { eyebrow: t("A LITTLE ROOM TO GET DRESSED", "\u0645\u0633\u0627\u062D\u0629 \u0635\u063A\u064A\u0631\u0629 \u0644\u0627\u062E\u062A\u064A\u0627\u0631\u0627\u062A \u0623\u062C\u0645\u0644"), title: t("Your wardrobe", "\u062E\u0632\u0627\u0646\u062A\u064A"), sub: t("A considered edit of pieces you love.", "\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0646\u062A\u0642\u0627\u0629 \u0645\u0646 \u0627\u0644\u0642\u0637\u0639 \u0627\u0644\u062A\u064A \u062A\u062D\u0628\u064A\u0646\u0647\u0627."), children: /* @__PURE__ */ jsxDEV("button", { className: "primary-button", onClick: onUpload, children: [
+    /* @__PURE__ */ jsxDEV(Heading, { eyebrow: t("A LITTLE ROOM TO GET DRESSED", "\u0645\u0633\u0627\u062D\u0629 \u0635\u063A\u064A\u0631\u0629 \u0644\u0627\u062E\u062A\u064A\u0627\u0631\u0627\u062A \u0623\u062C\u0645\u0644"), title: t("Your wardrobe", "\u062E\u0632\u0627\u0646\u062A\u064A"), sub: t("A considered edit of pieces you love.", "\u0645\u062C\u0645\u0648\u0639\u0629 \u0645\u0646\u062A\u0642\u0627\u0629 \u0645\u0646 \u0627\u0644\u0642\u0637\u0639 \u0627\u0644\u0645\u0641\u0636\u0651\u0644\u0629 \u0644\u062F\u064A\u0643."), children: /* @__PURE__ */ jsxDEV("button", { className: "primary-button", onClick: onUpload, children: [
       /* @__PURE__ */ jsxDEV(Plus, { size: 17 }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 19,
         columnNumber: 865
       }, this),
-      t("Add a piece", "\u0623\u0636\u064A\u0641\u064A \u0642\u0637\u0639\u0629")
+      t("Add a piece", "\u0625\u0636\u0627\u0641\u0629 \u0642\u0637\u0639\u0629")
     ] }, void 0, true, {
       fileName: "<stdin>",
       lineNumber: 19,
@@ -421,7 +421,7 @@ function Closet({ onUpload }) {
           lineNumber: 19,
           columnNumber: 1167
         }, this),
-        /* @__PURE__ */ jsxDEV("input", { value: search, onChange: (e) => setSearch(e.target.value), placeholder: t("Search your closet", "\u0627\u0628\u062D\u062B\u064A \u0641\u064A \u062E\u0632\u0627\u0646\u062A\u0643") }, void 0, false, {
+        /* @__PURE__ */ jsxDEV("input", { value: search, onChange: (e) => setSearch(e.target.value), placeholder: t("Search your closet", "\u0627\u0644\u0628\u062D\u062B \u0641\u064A \u0627\u0644\u062E\u0632\u0627\u0646\u0629") }, void 0, false, {
           fileName: "<stdin>",
           lineNumber: 19,
           columnNumber: 1186
@@ -489,7 +489,7 @@ function Closet({ onUpload }) {
       lineNumber: 19,
       columnNumber: 1575
     }, this),
-    !filtered.length && /* @__PURE__ */ jsxDEV("div", { className: "empty-state", children: t("No pieces found. Try another search.", "\u0644\u0645 \u064A\u062A\u0645 \u0627\u0644\u0639\u062B\u0648\u0631 \u0639\u0644\u0649 \u0642\u0637\u0639. \u062C\u0631\u0651\u0628\u064A \u0628\u062D\u062B\u064B\u0627 \u0622\u062E\u0631.") }, void 0, false, {
+    !filtered.length && /* @__PURE__ */ jsxDEV("div", { className: "empty-state", children: t("No pieces found. Try another search.", "\u0644\u0627 \u062A\u0648\u062C\u062F \u0642\u0637\u0639 \u0645\u0637\u0627\u0628\u0642\u0629 \u0644\u0647\u0630\u0627 \u0627\u0644\u0628\u062D\u062B.") }, void 0, false, {
       fileName: "<stdin>",
       lineNumber: 19,
       columnNumber: 1754
@@ -503,7 +503,7 @@ function Closet({ onUpload }) {
 function MiniDraggable({ item, selected }) {
   const t = useT();
   const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({ id: item.id, data: { item } });
-  return /* @__PURE__ */ jsxDEV("button", { ref: setNodeRef, style: transform ? { transform: "translate3d(" + transform.x + "px," + transform.y + "px,0)", zIndex: 20 } : void 0, ...attributes, ...listeners, onClick: () => { const s = useWardrobeStore.getState(); selected ? s.removeFromOutfit(item.id) : s.addToOutfit(item); }, "aria-pressed": selected, className: "mini-piece " + (item.cutout ? "is-cutout " : "") + (selected ? "piece-selected " : "") + (isDragging ? "is-dragging" : ""), title: t("Drag " + item.name + " to the look", "\u0627\u0633\u062D\u0628\u064A " + item.name + " \u0625\u0644\u0649 \u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629"), children: [
+  return /* @__PURE__ */ jsxDEV("button", { ref: setNodeRef, style: transform ? { transform: "translate3d(" + transform.x + "px," + transform.y + "px,0)", zIndex: 20 } : void 0, ...attributes, ...listeners, onClick: () => { const s = useWardrobeStore.getState(); selected ? s.removeFromOutfit(item.id) : s.addToOutfit(item); }, "aria-pressed": selected, className: "mini-piece " + (item.cutout ? "is-cutout " : "") + (selected ? "piece-selected " : "") + (isDragging ? "is-dragging" : ""), title: t("Drag " + item.name + " to the look", "\u0633\u062D\u0628 " + item.name + " \u0625\u0644\u0649 \u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629"), children: [
     /* @__PURE__ */ jsxDEV("img", { src: item.image, alt: item.name }, void 0, false, {
       fileName: "<stdin>",
       lineNumber: 20,
@@ -585,7 +585,7 @@ function ChatPanel({ compact = false }) {
   const saveSettings = () => {
     const provider = settings.provider || "websim";
     if (provider !== "websim" && !settings.apiKey.trim()) {
-      setSettingsStatus(t("Enter an API key first.", "\u0623\u062F\u062E\u0644\u064A \u0645\u0641\u062A\u0627\u062D API \u0623\u0648\u0644\u064B\u0627."));
+      setSettingsStatus(t("Enter an API key first.", "\u064A\u0644\u0632\u0645 \u0625\u062F\u062E\u0627\u0644 \u0645\u0641\u062A\u0627\u062D API \u0623\u0648\u0644\u064B\u0627."));
       return;
     }
     try {
@@ -595,7 +595,7 @@ function ChatPanel({ compact = false }) {
       setSaved(true);
       setSettingsStatus(provider === "websim" ? t("WebSim AI is ready. No API key needed.", "WebSim AI \u062C\u0627\u0647\u0632\u060C \u0644\u0627 \u062D\u0627\u062C\u0629 \u0625\u0644\u0649 \u0645\u0641\u062A\u0627\u062D API.") : t("Key saved in this browser.", "\u062A\u0645 \u062D\u0641\u0638 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0641\u064A \u0647\u0630\u0627 \u0627\u0644\u0645\u062A\u0635\u0641\u062D."));
     } catch {
-      setSettingsStatus(t("Could not save. Check this browser\u2019s storage settings.", "\u062A\u0639\u0630\u0631 \u0627\u0644\u062D\u0641\u0638. \u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u062E\u0632\u064A\u0646 \u0641\u064A \u0627\u0644\u0645\u062A\u0635\u0641\u062D."));
+      setSettingsStatus(t("Could not save. Check this browser\u2019s storage settings.", "\u062A\u0639\u0630\u0651\u0631 \u0627\u0644\u062D\u0641\u0638. \u064A\u064F\u0631\u062C\u0649 \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0625\u0639\u062F\u0627\u062F\u0627\u062A \u0627\u0644\u062A\u062E\u0632\u064A\u0646 \u0641\u064A \u0627\u0644\u0645\u062A\u0635\u0641\u062D."));
     }
   };
   const clearSettings = () => {
@@ -619,7 +619,7 @@ function ChatPanel({ compact = false }) {
     if (provider !== "websim" && !apiKey) {
       setTyping(false);
       setSettingsOpen(true);
-      addMessage("assistant", t("Add your provider API key in Stylist settings, or select WebSim AI to chat without one.", "\u0623\u0636\u064A\u0641\u064A \u0645\u0641\u062A\u0627\u062D \u0645\u0632\u0648\u0651\u062F \u0627\u0644\u062E\u062F\u0645\u0629 \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A\u060C \u0623\u0648 \u0627\u062E\u062A\u0627\u0631\u064A WebSim AI \u0644\u0644\u062F\u0631\u062F\u0634\u0629 \u062F\u0648\u0646 \u0645\u0641\u062A\u0627\u062D."));
+      addMessage("assistant", t("Add your provider API key in Stylist settings, or select WebSim AI to chat without one.", "\u064A\u064F\u0631\u062C\u0649 \u0625\u0636\u0627\u0641\u0629 \u0645\u0641\u062A\u0627\u062D \u0645\u0632\u0648\u0651\u062F \u0627\u0644\u062E\u062F\u0645\u0629 \u0645\u0646 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A\u060C \u0623\u0648 \u0627\u062E\u062A\u064A\u0627\u0631 WebSim AI \u0644\u0644\u062F\u0631\u062F\u0634\u0629 \u062F\u0648\u0646 \u0645\u0641\u062A\u0627\u062D."));
       requestAnimationFrame(() => bottom.current && bottom.current.scrollIntoView({ behavior: "smooth", block: "end" }));
       return;
     }
@@ -627,7 +627,7 @@ function ChatPanel({ compact = false }) {
       const answer = await askStylist(provider, apiKey, [...messages, { role: "user", text }], useWardrobeStore.getState().activeOutfit, language);
       if (useWardrobeStore.getState().sessionVersion === sessionVersion) addMessage("assistant", answer);
     } catch (error) {
-      if (useWardrobeStore.getState().sessionVersion === sessionVersion) addMessage("assistant", t("I couldn\u2019t get a response from ", "\u062A\u0639\u0630\u0631 \u0627\u0644\u062D\u0635\u0648\u0644 \u0639\u0644\u0649 \u0631\u062F \u0645\u0646 ") + (provider === "anthropic" ? "Anthropic" : provider === "websim" ? "WebSim AI" : "OpenAI") + ": " + (error.message || t("Please check your key and connection.", "\u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0648\u0627\u0644\u0627\u062A\u0635\u0627\u0644.")));
+      if (useWardrobeStore.getState().sessionVersion === sessionVersion) addMessage("assistant", t("I couldn\u2019t get a response from ", "\u062A\u0639\u0630\u0631 \u0627\u0644\u062D\u0635\u0648\u0644 \u0639\u0644\u0649 \u0631\u062F \u0645\u0646 ") + (provider === "anthropic" ? "Anthropic" : provider === "websim" ? "WebSim AI" : "OpenAI") + ": " + (error.message || t("Please check your key and connection.", "\u064A\u064F\u0631\u062C\u0649 \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0648\u0627\u0644\u0627\u062A\u0635\u0627\u0644.")));
     } finally {
       setTyping(false);
       requestAnimationFrame(() => bottom.current && bottom.current.scrollIntoView({ behavior: "smooth", block: "end" }));
@@ -673,7 +673,7 @@ function ChatPanel({ compact = false }) {
             lineNumber: 30,
             columnNumber: 231
           }, this),
-          settings.provider === "websim" ? t("WebSim AI \xB7 no key needed", "WebSim AI \xB7 \u0644\u0627 \u062D\u0627\u062C\u0629 \u0625\u0644\u0649 \u0645\u0641\u062A\u0627\u062D") : saved ? t("Connected with your API key", "\u0645\u062A\u0635\u0644 \u0628\u0645\u0641\u062A\u0627\u062D API") : t("Add your API key in settings", "\u0623\u0636\u064A\u0641\u064A \u0645\u0641\u062A\u0627\u062D API \u0641\u064A \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A")
+          settings.provider === "websim" ? t("WebSim AI \xB7 no key needed", "WebSim AI \xB7 \u0644\u0627 \u062D\u0627\u062C\u0629 \u0625\u0644\u0649 \u0645\u0641\u062A\u0627\u062D") : saved ? t("Connected with your API key", "\u0645\u062A\u0635\u0644 \u0628\u0645\u0641\u062A\u0627\u062D API") : t("Add your API key in settings", "\u0625\u0636\u0627\u0641\u0629 \u0645\u0641\u062A\u0627\u062D API \u0645\u0646 \u0627\u0644\u0625\u0639\u062F\u0627\u062F\u0627\u062A")
         ] }, void 0, true, {
           fileName: "<stdin>",
           lineNumber: 30,
@@ -757,7 +757,7 @@ function ChatPanel({ compact = false }) {
             fileName: "<stdin>",
             lineNumber: 30,
             columnNumber: 1151
-          }, this) : m.id === "welcome" && language === "ar" ? t("Tell me what you\u2019re getting dressed for. I\u2019ll style around the pieces on your canvas.", "\u0623\u062E\u0628\u0631\u064A\u0646\u064A \u0628\u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629 \u0627\u0644\u062A\u064A \u062A\u0633\u062A\u0639\u062F\u064A\u0646 \u0644\u0647\u0627\u060C \u0648\u0633\u0623\u0642\u062A\u0631\u062D \u062A\u0646\u0633\u064A\u0642\u064B\u0627 \u062D\u0648\u0644 \u0627\u0644\u0642\u0637\u0639 \u0627\u0644\u0645\u0648\u062C\u0648\u062F\u0629 \u0639\u0644\u0649 \u0627\u0644\u0644\u0648\u062D\u0629.") : m.text }, void 0, false, {
+          }, this) : m.id === "welcome" && language === "ar" ? t("Tell me what you\u2019re getting dressed for. I\u2019ll style around the pieces on your canvas.", "\u0645\u0627 \u0627\u0644\u0645\u0646\u0627\u0633\u0628\u0629 \u0627\u0644\u0642\u0627\u062F\u0645\u0629\u061F \u0633\u0623\u0642\u062A\u0631\u062D \u062A\u0646\u0633\u064A\u0642\u064B\u0627 \u0645\u0646 \u0627\u0644\u0642\u0637\u0639 \u0627\u0644\u0645\u0648\u062C\u0648\u062F\u0629 \u0639\u0644\u0649 \u0627\u0644\u0644\u0648\u062D\u0629.") : m.text }, void 0, false, {
             fileName: "<stdin>",
             lineNumber: 30,
             columnNumber: 1101
@@ -847,7 +847,7 @@ function ChatPanel({ compact = false }) {
       columnNumber: 747
     }, this),
     !compact && /* @__PURE__ */ jsxDEV("div", { className: "suggested-prompts", children: [
-      /* @__PURE__ */ jsxDEV("button", { onClick: () => send(t("Help me build a weekend look", "\u0633\u0627\u0639\u062F\u064A\u0646\u064A \u0641\u064A \u062A\u0646\u0633\u064A\u0642 \u0625\u0637\u0644\u0627\u0644\u0629 \u0644\u0639\u0637\u0644\u0629 \u0646\u0647\u0627\u064A\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639")), children: [
+      /* @__PURE__ */ jsxDEV("button", { onClick: () => send(t("Help me build a weekend look", "\u0623\u062D\u062A\u0627\u062C \u0625\u0637\u0644\u0627\u0644\u0629 \u0644\u0639\u0637\u0644\u0629 \u0646\u0647\u0627\u064A\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639")), children: [
         t("Weekend look", "\u0625\u0637\u0644\u0627\u0644\u0629 \u0646\u0647\u0627\u064A\u0629 \u0627\u0644\u0623\u0633\u0628\u0648\u0639"),
         " ",
         /* @__PURE__ */ jsxDEV(ArrowRight, { size: 12 }, void 0, false, {
@@ -882,7 +882,7 @@ function ChatPanel({ compact = false }) {
       e.preventDefault();
       send();
     }, children: [
-      /* @__PURE__ */ jsxDEV("input", { value: draft, onChange: (e) => setDraft(e.target.value), placeholder: t("Ask your stylist anything\u2026", "\u0627\u0633\u0623\u0644\u064A \u0645\u0646\u0633\u0651\u0642\u0643 \u0639\u0646 \u0623\u064A \u0634\u064A\u0621\u2026") }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("input", { value: draft, onChange: (e) => setDraft(e.target.value), placeholder: t("Ask your stylist anything\u2026", "\u0631\u0633\u0627\u0644\u0629 \u0625\u0644\u0649 \u0627\u0644\u0645\u0646\u0633\u0651\u0642\u2026") }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 30,
         columnNumber: 2983
@@ -928,7 +928,7 @@ function ChatPanel({ compact = false }) {
         lineNumber: 30,
         columnNumber: 4039
       }, this),
-      /* @__PURE__ */ jsxDEV("p", { className: "settings-intro", children: t("Use WebSim AI without an API key, or connect OpenAI or Anthropic.", "\u0627\u0633\u062A\u062E\u062F\u0645\u064A WebSim AI \u062F\u0648\u0646 \u0645\u0641\u062A\u0627\u062D API\u060C \u0623\u0648 \u0627\u0631\u0628\u0637\u064A OpenAI \u0623\u0648 Anthropic.") }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("p", { className: "settings-intro", children: t("Use WebSim AI without an API key, or connect OpenAI or Anthropic.", "\u0627\u0633\u062A\u062E\u062F\u0627\u0645 WebSim AI \u062F\u0648\u0646 \u0645\u0641\u062A\u0627\u062D API\u060C \u0623\u0648 \u0631\u0628\u0637 OpenAI \u0623\u0648 Anthropic.") }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 30,
         columnNumber: 4109
@@ -1002,7 +1002,7 @@ function ChatPanel({ compact = false }) {
             lineNumber: 30,
             columnNumber: 5523
           }, this),
-          /* @__PURE__ */ jsxDEV("span", { children: t("Your key is saved in this browser\u2019s local storage and sent directly to the selected AI provider. It is not encrypted; anyone with access to this browser or its scripts could read it. Use only on a trusted device.", "\u064A\u064F\u062D\u0641\u0638 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0641\u064A \u0627\u0644\u062A\u062E\u0632\u064A\u0646 \u0627\u0644\u0645\u062D\u0644\u064A \u0644\u0647\u0630\u0627 \u0627\u0644\u0645\u062A\u0635\u0641\u062D \u0648\u064A\u064F\u0631\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u0629\u064B \u0625\u0644\u0649 \u0645\u0632\u0648\u0651\u062F \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A. \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u063A\u064A\u0631 \u0645\u0634\u0641\u0651\u0631\u061B \u0627\u0633\u062A\u062E\u062F\u0645\u064A\u0647 \u0639\u0644\u0649 \u062C\u0647\u0627\u0632 \u0645\u0648\u062B\u0648\u0642 \u0641\u0642\u0637.") }, void 0, false, {
+          /* @__PURE__ */ jsxDEV("span", { children: t("Your key is saved in this browser\u2019s local storage and sent directly to the selected AI provider. It is not encrypted; anyone with access to this browser or its scripts could read it. Use only on a trusted device.", "\u064A\u064F\u062D\u0641\u0638 \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u0641\u064A \u0627\u0644\u062A\u062E\u0632\u064A\u0646 \u0627\u0644\u0645\u062D\u0644\u064A \u0644\u0647\u0630\u0627 \u0627\u0644\u0645\u062A\u0635\u0641\u062D \u0648\u064A\u064F\u0631\u0633\u0644 \u0645\u0628\u0627\u0634\u0631\u0629\u064B \u0625\u0644\u0649 \u0645\u0632\u0648\u0651\u062F \u0627\u0644\u0630\u0643\u0627\u0621 \u0627\u0644\u0627\u0635\u0637\u0646\u0627\u0639\u064A. \u0627\u0644\u0645\u0641\u062A\u0627\u062D \u063A\u064A\u0631 \u0645\u0634\u0641\u0651\u0631\u061B \u064A\u064F\u0646\u0635\u062D \u0628\u0627\u0633\u062A\u062E\u062F\u0627\u0645\u0647 \u0639\u0644\u0649 \u062C\u0647\u0627\u0632 \u0645\u0648\u062B\u0648\u0642 \u0641\u0642\u0637.") }, void 0, false, {
             fileName: "<stdin>",
             lineNumber: 30,
             columnNumber: 5591
@@ -1028,7 +1028,7 @@ function ChatPanel({ compact = false }) {
           lineNumber: 30,
           columnNumber: 6231
         }, this),
-        /* @__PURE__ */ jsxDEV("button", { className: "primary-button settings-save", onClick: saveSettings, disabled: settings.provider !== "websim" && !settings.apiKey?.trim(), children: settings.provider === "websim" ? saved ? t("WebSim AI ready", "WebSim AI \u062C\u0627\u0647\u0632") : t("Use WebSim AI", "\u0627\u0633\u062A\u062E\u062F\u0645\u064A WebSim AI") : saved ? t("Save changes", "\u062D\u0641\u0638 \u0627\u0644\u062A\u063A\u064A\u064A\u0631\u0627\u062A") : t("Save key", "\u062D\u0641\u0638 \u0627\u0644\u0645\u0641\u062A\u0627\u062D") }, void 0, false, {
+        /* @__PURE__ */ jsxDEV("button", { className: "primary-button settings-save", onClick: saveSettings, disabled: settings.provider !== "websim" && !settings.apiKey?.trim(), children: settings.provider === "websim" ? saved ? t("WebSim AI ready", "WebSim AI \u062C\u0627\u0647\u0632") : t("Use WebSim AI", "\u0627\u0633\u062A\u062E\u062F\u0627\u0645 WebSim AI") : saved ? t("Save changes", "\u062D\u0641\u0638 \u0627\u0644\u062A\u063A\u064A\u064A\u0631\u0627\u062A") : t("Save key", "\u062D\u0641\u0638 \u0627\u0644\u0645\u0641\u062A\u0627\u062D") }, void 0, false, {
           fileName: "<stdin>",
           lineNumber: 30,
           columnNumber: 6351
@@ -1071,7 +1071,7 @@ function Stylist({ onUpload }) {
       if (item) useWardrobeStore.getState().addToOutfit(item);
     }
   }, children: /* @__PURE__ */ jsxDEV("main", { className: "page-content stylist-page", children: [
-    /* @__PURE__ */ jsxDEV(Heading, { eyebrow: t("A MORE PERSONAL WAY TO GET DRESSED", "\u0637\u0631\u064A\u0642\u0629 \u0623\u0643\u062B\u0631 \u062E\u0635\u0648\u0635\u064A\u0629 \u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0625\u0637\u0644\u0627\u0644\u062A\u0643"), title: t("Let\u2019s find your look", "\u0644\u0646\u0646\u0633\u0651\u0642 \u0625\u0637\u0644\u0627\u0644\u062A\u0643"), sub: t("A good outfit starts with what you already own.", "\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u062C\u0645\u064A\u0644\u0629 \u062A\u0628\u062F\u0623 \u0628\u0645\u0627 \u062A\u0645\u0644\u0643\u064A\u0646\u0647 \u0628\u0627\u0644\u0641\u0639\u0644."), children: /* @__PURE__ */ jsxDEV("button", { className: "text-button clear-session-button", onClick: clear, children: [
+    /* @__PURE__ */ jsxDEV(Heading, { eyebrow: t("A MORE PERSONAL WAY TO GET DRESSED", "\u0637\u0631\u064A\u0642\u0629 \u0623\u0643\u062B\u0631 \u062E\u0635\u0648\u0635\u064A\u0629 \u0644\u0627\u062E\u062A\u064A\u0627\u0631 \u0625\u0637\u0644\u0627\u0644\u062A\u0643"), title: t("Let\u2019s find your look", "\u0644\u0646\u0646\u0633\u0651\u0642 \u0625\u0637\u0644\u0627\u0644\u062A\u0643"), sub: t("A good outfit starts with what you already own.", "\u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629 \u0627\u0644\u062C\u0645\u064A\u0644\u0629 \u062A\u0628\u062F\u0623 \u0628\u0645\u0627 \u0641\u064A \u062E\u0632\u0627\u0646\u062A\u0643."), children: /* @__PURE__ */ jsxDEV("button", { className: "text-button clear-session-button", onClick: clear, children: [
       t("Clear Outfit & Chat", "\u0645\u0633\u062D \u0627\u0644\u0625\u0637\u0644\u0627\u0644\u0629 \u0648\u0627\u0644\u062F\u0631\u062F\u0634\u0629"),
       " ",
       /* @__PURE__ */ jsxDEV(X, { size: 14 }, void 0, false, {
@@ -1122,7 +1122,7 @@ function Stylist({ onUpload }) {
                 lineNumber: 32,
                 columnNumber: 1164
               }, this),
-              /* @__PURE__ */ jsxDEV("strong", { children: t("Drag into your look", "\u0627\u0633\u062D\u0628\u064A\u0647\u0627 \u0625\u0644\u0649 \u0625\u0637\u0644\u0627\u0644\u062A\u0643") }, void 0, false, {
+              /* @__PURE__ */ jsxDEV("strong", { children: t("Drag into your look", "\u0627\u062E\u062A\u064A\u0627\u0631 \u0627\u0644\u0642\u0637\u0639 \u0644\u0644\u0625\u0637\u0644\u0627\u0644\u0629") }, void 0, false, {
                 fileName: "<stdin>",
                 lineNumber: 32,
                 columnNumber: 1222
@@ -1165,7 +1165,7 @@ function Stylist({ onUpload }) {
                 lineNumber: 32,
                 columnNumber: 1567
               }, this),
-              t("Drag pieces to canvas", "\u0627\u0633\u062D\u0628\u064A \u0627\u0644\u0642\u0637\u0639 \u0625\u0644\u0649 \u0627\u0644\u0644\u0648\u062D\u0629")
+              t("Drag pieces to canvas", "\u0633\u062D\u0628 \u0627\u0644\u0642\u0637\u0639\u0629 \u0623\u0648 \u0627\u0644\u0636\u063A\u0637 \u0639\u0644\u064A\u0647\u0627 \u0644\u0644\u0625\u0636\u0627\u0641\u0629")
             ] }, void 0, true, {
               fileName: "<stdin>",
               lineNumber: 32,
@@ -1234,19 +1234,19 @@ function AuthScreen({ language, setLanguage, initialError }) {
     setNotice("");
     setBusy(true);
     try {
-      if (!isSupabaseConfigured()) throw new Error(t("Supabase is not configured. Check supabase/config.js.", "\u0644\u0645 \u064A\u062A\u0645 \u0625\u0639\u062F\u0627\u062F Supabase. \u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0645\u0644\u0641 supabase/config.js."));
+      if (!isSupabaseConfigured()) throw new Error(t("Supabase is not configured. Check supabase/config.js.", "\u0644\u0645 \u064A\u062A\u0645 \u0625\u0639\u062F\u0627\u062F Supabase. \u064A\u064F\u0631\u062C\u0649 \u0627\u0644\u062A\u062D\u0642\u0642 \u0645\u0646 \u0645\u0644\u0641 supabase/config.js."));
       const supabase = getSupabaseClient();
       if (signup) {
         const { data, error: error2 } = await supabase.auth.signUp({ email: email.trim(), password, options: { emailRedirectTo: window.location.origin + "/" } });
         if (error2) throw error2;
-        if (!data.session) setNotice(t("Check your email to confirm your account, then sign in.", "\u062A\u062D\u0642\u0642\u064A \u0645\u0646 \u0628\u0631\u064A\u062F\u0643 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A \u0644\u062A\u0623\u0643\u064A\u062F \u0627\u0644\u062D\u0633\u0627\u0628\u060C \u062B\u0645 \u0633\u062C\u0651\u0644\u064A \u0627\u0644\u062F\u062E\u0648\u0644."));
+        if (!data.session) setNotice(t("Check your email to confirm your account, then sign in.", "\u062A\u0645 \u0625\u0631\u0633\u0627\u0644 \u0631\u0627\u0628\u0637 \u0627\u0644\u062A\u0623\u0643\u064A\u062F \u0625\u0644\u0649 \u0628\u0631\u064A\u062F\u0643 \u0627\u0644\u0625\u0644\u0643\u062A\u0631\u0648\u0646\u064A. \u0628\u0639\u062F \u0627\u0644\u062A\u0623\u0643\u064A\u062F \u064A\u0645\u0643\u0646 \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644."));
         else setNotice(t("Account created.", "\u062A\u0645 \u0625\u0646\u0634\u0627\u0621 \u0627\u0644\u062D\u0633\u0627\u0628."));
       } else {
         const { error: error2 } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
         if (error2) throw error2;
       }
     } catch (err) {
-      setError(err.message || t("Authentication failed. Please try again.", "\u062A\u0639\u0630\u0651\u0631 \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644. \u062D\u0627\u0648\u0644\u064A \u0645\u0631\u0629 \u0623\u062E\u0631\u0649."));
+      setError(err.message || t("Authentication failed. Please try again.", "\u062A\u0639\u0630\u0651\u0631 \u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644. \u064A\u064F\u0631\u062C\u0649 \u0627\u0644\u0645\u062D\u0627\u0648\u0644\u0629 \u0645\u0631\u0629 \u0623\u062E\u0631\u0649."));
     } finally {
       setBusy(false);
     }
@@ -1306,7 +1306,7 @@ function AuthScreen({ language, setLanguage, initialError }) {
         lineNumber: 34,
         columnNumber: 1773
       }, this),
-      /* @__PURE__ */ jsxDEV("p", { children: t("Sign in to access your closet and stylist.", "\u0633\u062C\u0651\u0644\u064A \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u062E\u0632\u0627\u0646\u062A\u0643 \u0648\u0645\u0646\u0633\u0651\u0642 \u0627\u0644\u0623\u0632\u064A\u0627\u0621.") }, void 0, false, {
+      /* @__PURE__ */ jsxDEV("p", { children: t("Sign in to access your closet and stylist.", "\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644 \u0644\u0644\u0648\u0635\u0648\u0644 \u0625\u0644\u0649 \u0627\u0644\u062E\u0632\u0627\u0646\u0629 \u0648\u0645\u0646\u0633\u0651\u0642 \u0627\u0644\u0623\u0632\u064A\u0627\u0621.") }, void 0, false, {
         fileName: "<stdin>",
         lineNumber: 34,
         columnNumber: 1863
@@ -1362,13 +1362,13 @@ function AuthScreen({ language, setLanguage, initialError }) {
         columnNumber: 2837
       }, this),
       /* @__PURE__ */ jsxDEV("div", { className: "auth-mode-switch", children: [
-        signup ? t("Already have an account?", "\u0644\u062F\u064A\u0643 \u062D\u0633\u0627\u0628 \u0628\u0627\u0644\u0641\u0639\u0644\u061F") : t("New to FORME?", "\u062C\u062F\u064A\u062F\u0629 \u0639\u0644\u0649 FORME\u061F"),
+        signup ? t("Already have an account?", "\u0644\u062F\u064A\u0643 \u062D\u0633\u0627\u0628 \u0628\u0627\u0644\u0641\u0639\u0644\u061F") : t("New to FORME?", "\u0644\u064A\u0633 \u0644\u062F\u064A\u0643 \u062D\u0633\u0627\u0628\u061F"),
         " ",
         /* @__PURE__ */ jsxDEV("button", { onClick: () => {
           setMode(signup ? "login" : "signup");
           setError("");
           setNotice("");
-        }, children: signup ? t("Sign in", "\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644") : t("Create an account", "\u0623\u0646\u0634\u0626\u064A \u062D\u0633\u0627\u0628\u064B\u0627") }, void 0, false, {
+        }, children: signup ? t("Sign in", "\u062A\u0633\u062C\u064A\u0644 \u0627\u0644\u062F\u062E\u0648\u0644") : t("Create an account", "\u0625\u0646\u0634\u0627\u0621 \u062D\u0633\u0627\u0628") }, void 0, false, {
           fileName: "<stdin>",
           lineNumber: 34,
           columnNumber: 3020

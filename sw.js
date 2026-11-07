@@ -4,7 +4,7 @@
 // - Pinned CDN modules and fonts: cache first (their URLs are versioned).
 // - Icons and images: stale-while-revalidate.
 // - Supabase (auth, data, signed image URLs) is never cached.
-const VERSION = 'v8';
+const VERSION = 'v9';
 const SHELL_CACHE = 'forme-shell-' + VERSION;
 const RUNTIME_CACHE = 'forme-runtime-' + VERSION;
 const APP_SHELL = [

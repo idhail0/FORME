@@ -29,15 +29,15 @@ export function scoreLook(items, colors, t) {
   let coverage = 0;
   const base = has("Dresses") || (has("Tops") && has("Bottoms"));
   if (base) coverage = 70; else if (has("Tops") || has("Bottoms") || has("Outerwear")) coverage = 38;
-  if (has("Shoes")) coverage += 20; else tips.push(t("Add shoes to finish the look.", "أضيفي حذاءً لإكمال الإطلالة."));
+  if (has("Shoes")) coverage += 20; else tips.push(t("Add shoes to finish the look.", "حذاء مناسب سيُكمل الإطلالة."));
   if (has("Outerwear") || has("Accessories")) coverage += 10;
   if (!base) {
-    if (has("Tops") && !has("Bottoms")) tips.unshift(t("Pick a bottom to go with your top.", "اختاري قطعة سفلية تناسب القطعة العلوية."));
-    else if (has("Bottoms") && !has("Tops")) tips.unshift(t("Pick a top for these bottoms.", "اختاري قطعة علوية تناسب هذه القطعة."));
-    else if (!has("Tops") && !has("Bottoms")) tips.unshift(t("Start with a top and bottom, or a dress.", "ابدئي بقطعة علوية وسفلية، أو فستان."));
+    if (has("Tops") && !has("Bottoms")) tips.unshift(t("Pick a bottom to go with your top.", "تنقص الإطلالة قطعة سفلية تناسب القطعة العلوية."));
+    else if (has("Bottoms") && !has("Tops")) tips.unshift(t("Pick a top for these bottoms.", "تنقص الإطلالة قطعة علوية تناسب هذه القطعة."));
+    else if (!has("Tops") && !has("Bottoms")) tips.unshift(t("Start with a top and bottom, or a dress.", "البداية: قطعة علوية وسفلية، أو فستان."));
   }
   for (const c of ["Bottoms", "Dresses", "Shoes"]) {
-    if (count(c) > 1) { coverage -= 25; tips.push(t("Two pieces of the same kind compete — keep one.", "قطعتان من النوع نفسه تتنافسان — احتفظي بواحدة.")); break; }
+    if (count(c) > 1) { coverage -= 25; tips.push(t("Two pieces of the same kind compete — keep one.", "قطعتان من النوع نفسه تتنافسان — واحدة تكفي.")); break; }
   }
   if (has("Dresses") && has("Bottoms")) { coverage -= 15; tips.push(t("A dress and bottoms rarely work together.", "الفستان مع قطعة سفلية نادراً ما ينسجمان.")); }
   coverage = Math.max(0, Math.min(100, coverage));
@@ -46,7 +46,7 @@ export function scoreLook(items, colors, t) {
   const known = colors.filter(Boolean);
   const accents = known.filter((c) => !c.neutral);
   let color = 86, colorNote;
-  if (known.length < 2) { color = 80; colorNote = t("Add pieces to read the palette", "أضيفي قطعاً لقراءة الألوان"); }
+  if (known.length < 2) { color = 80; colorNote = t("Add pieces to read the palette", "قطع أكثر لقراءة الألوان"); }
   else if (accents.length === 0) { color = 90; colorNote = t("Calm neutral palette", "ألوان محايدة هادئة"); }
   else if (accents.length === 1) { color = 96; colorNote = t("Neutrals with one statement color", "ألوان محايدة مع لون واحد بارز"); }
   else if (accents.length === 2) {
@@ -54,14 +54,14 @@ export function scoreLook(items, colors, t) {
     if (d < 30) { color = 90; colorNote = t("Tonal — colors from the same family", "تدرّج من عائلة لونية واحدة"); }
     else if (d > 150) { color = 80; colorNote = t("Bold complementary pairing", "تباين متكامل جريء"); }
     else if (d < 60) { color = 84; colorNote = t("Analogous colors that flow together", "ألوان متجاورة متناغمة"); }
-    else { color = 56; colorNote = t("These two colors compete", "هذان اللونان يتنافسان"); tips.push(t("Swap one colorful piece for a neutral.", "استبدلي قطعة ملوّنة بأخرى محايدة.")); }
+    else { color = 56; colorNote = t("These two colors compete", "هذان اللونان يتنافسان"); tips.push(t("Swap one colorful piece for a neutral.", "استبدال قطعة ملوّنة بأخرى محايدة يحسّن التوازن.")); }
   } else {
     color = 48; colorNote = t("Too many statement colors", "ألوان بارزة كثيرة");
-    tips.push(t("Keep it to one or two statement colors.", "اكتفي بلون أو لونين بارزين."));
+    tips.push(t("Keep it to one or two statement colors.", "لون أو لونان بارزان يكفيان."));
   }
   if (known.length >= 2) {
     const Ls = known.map((c) => c.L);
-    if (Math.max(...Ls) - Math.min(...Ls) < 12 && accents.length < 2) { color -= 6; tips.push(t("Add a lighter or darker piece for contrast.", "أضيفي قطعة أفتح أو أغمق لخلق تباين.")); }
+    if (Math.max(...Ls) - Math.min(...Ls) < 12 && accents.length < 2) { color -= 6; tips.push(t("Add a lighter or darker piece for contrast.", "قطعة أفتح أو أغمق ستخلق تباينًا أجمل.")); }
   }
 
   // Style match
@@ -105,7 +105,7 @@ export function LookScore({ items, language }) {
     return html`<section className="look-score is-empty" aria-label=${t("Look score", "تقييم الإطلالة")}>
       <div className="score-ring" style=${{ "--p": 0 }}><span>—</span></div>
       <div><strong>${t("Match score", "نسبة التوافق")}</strong>
-        <p>${t("Add at least two pieces to see how well they work together.", "أضيفي قطعتين على الأقل لمعرفة مدى توافقهما.")}</p></div>
+        <p>${t("Add at least two pieces to see how well they work together.", "قطعتان على الأقل لمعرفة مدى التوافق.")}</p></div>
     </section>`;
   }
 
